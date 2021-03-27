@@ -107,7 +107,7 @@ public class BukkitElevator extends Elevator {
 		return !getShaftArea().overlaps(entity.getBoundingBox());
 	}
 
-	protected Block getBase() {
+	public Block getBase() {
 		Optional<Block> block = baseBlocks.stream()
 				.findFirst();
 		if (!block.isPresent()) {

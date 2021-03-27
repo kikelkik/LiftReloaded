@@ -26,14 +26,19 @@
             <version>${bukkitVersion}</version>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.14</version>
+            <groupId>com.github.koca2000</groupId>
+            <artifactId>NoteBlockAPI</artifactId>
+            <version>-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fr.neatmonster</groupId>
             <artifactId>nocheatplus</artifactId>
             <version>3.16.0-RC</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.14</version>
         </dependency>
     </dependencies>
 
@@ -75,6 +80,11 @@
             <!-- for nocheatplus -->
             <id>md5-repo</id>
             <url>http://repo.md-5.net/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <!-- for note blocks -->
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 

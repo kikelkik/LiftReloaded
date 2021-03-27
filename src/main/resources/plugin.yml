@@ -6,7 +6,7 @@ name: Lift
 startup: postworld
 version: ${project.version}
 description: Simple and easy Lifts and Elevators for Bukkit
-softdepend: [NoCheatPlus]
+softdepend: [NoCheatPlus, NoteBlockAPI]
 permissions:
   lift:
     description: Can ride in a lift

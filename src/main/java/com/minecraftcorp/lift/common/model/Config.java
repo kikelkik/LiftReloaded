@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import com.minecraftcorp.lift.bukkit.LiftPlugin;
+import com.minecraftcorp.lift.common.exception.ConfigurationException;
 
 import lombok.Getter;
 
@@ -38,6 +39,8 @@ public abstract class Config {
 	protected String scrollSelectEnabled;
 	protected String scrollSelectDisabled;
 	protected Integer secondsUntilTimeout;
+	protected Boolean soundEnabled;
+	protected Integer soundVolume;
 
 	protected static void copyDefaultConfig(LiftPlugin plugin, File dest) {
 		try (InputStream in = plugin.getResource("config.yml")) {
@@ -61,6 +64,12 @@ public abstract class Config {
 					.getParent());
 		} catch (Exception e) {
 			plugin.logWarn("Could not delete default directory");
+		}
+	}
+
+	protected void validate() throws ConfigurationException {
+		if (soundVolume < 0 || soundVolume > 100) {
+			throw new ConfigurationException("soundVolume must have a value from 0 to 100");
 		}
 	}
 }

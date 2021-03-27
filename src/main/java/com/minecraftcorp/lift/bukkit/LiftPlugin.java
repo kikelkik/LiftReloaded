@@ -1,11 +1,20 @@
 package com.minecraftcorp.lift.bukkit;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.minecraftcorp.lift.bukkit.command.LiftCommand;
@@ -14,15 +23,18 @@ import com.minecraftcorp.lift.bukkit.listener.RedstoneListener;
 import com.minecraftcorp.lift.bukkit.listener.VehicleListener;
 import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
+import com.minecraftcorp.lift.bukkit.service.sound.SoundTask;
+import com.minecraftcorp.lift.common.exception.ElevatorException;
 
 import lombok.Getter;
 
+@Getter
 public class LiftPlugin extends JavaPlugin {
 
 	public static LiftPlugin INSTANCE;
 	private static final BukkitConfig config = BukkitConfig.INSTANCE;
-	@Getter
 	private final Set<BukkitElevator> activeLifts = new HashSet<>();
+	private boolean noteBlockAPIEnabled;
 
 	@Override
 	public void onEnable() {
@@ -34,6 +46,11 @@ public class LiftPlugin extends JavaPlugin {
 		if (config.getRedstone()) {
 			new RedstoneListener();
 		}
+
+		noteBlockAPIEnabled = Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI");
+		if (noteBlockAPIEnabled) {
+			logWarn("*** NoteBlockAPI is not installed or not enabled. ***");
+		}
 	}
 
 	@Override
@@ -43,6 +60,7 @@ public class LiftPlugin extends JavaPlugin {
 
 	public void reload() {
 		BukkitConfig.INSTANCE.loadConfig(this);
+		SoundTask.reload();
 		logInfo("Lift successfully reloaded");
 	}
 
@@ -76,5 +94,21 @@ public class LiftPlugin extends JavaPlugin {
 		return activeLifts.stream()
 				.flatMap(lift -> Stream.concat(lift.getPassengers().stream(), lift.getFreezers().stream()))
 				.noneMatch(entity -> entityUuid.equals(entity.getUniqueId()));
+	}
+
+	public List<File> getMusicFiles() {
+		Path songDir = getDataFolder().toPath()
+				.resolve("music");
+		if (!Files.isDirectory(songDir)) {
+			logWarn(songDir + " could not be found. Will be unable to play music.");
+			return Collections.emptyList();
+		}
+		try {
+			return Arrays.stream(Objects.requireNonNull(songDir.toFile()
+					.listFiles((file, name) -> name.endsWith(".nbs"))))
+					.collect(Collectors.toList());
+		} catch (Exception e) {
+			throw new ElevatorException("Unable to find music files in " + songDir, e);
+		}
 	}
 }

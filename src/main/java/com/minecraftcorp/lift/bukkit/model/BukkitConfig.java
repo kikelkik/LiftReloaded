@@ -3,6 +3,7 @@ package com.minecraftcorp.lift.bukkit.model;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,11 +40,13 @@ import lombok.NoArgsConstructor;
 public class BukkitConfig extends Config {
 
 	public static final BukkitConfig INSTANCE = new BukkitConfig();
+	private static final LiftPlugin plugin = LiftPlugin.INSTANCE;
 
 	private final Map<Material, Double> blockSpeeds = new HashMap<>();
 	private final Set<Material> floorMaterials = new HashSet<>();
 	private final Set<Material> buttonMaterials = new HashSet<>();
 	private final Set<Material> signMaterials = new HashSet<>();
+	private final Set<Material> musicBlocks = new HashSet<>();
 
 	private boolean useNoCheatPlus;
 	private boolean serverFlightAllowed;
@@ -68,7 +71,11 @@ public class BukkitConfig extends Config {
 		if (blockSpeeds.containsKey(block.getType())) {
 			return blockSpeeds.get(block.getType());
 		}
-		throw new ElevatorException("");
+		throw new ElevatorException("Block speed not configured for " + block.getType());
+	}
+
+	public boolean isMusicEnabled(Block block) {
+		return musicBlocks.contains(block.getType());
 	}
 
 	public boolean isValidLiftStructureFromButton(Block buttonBlock) {
@@ -97,10 +104,14 @@ public class BukkitConfig extends Config {
 		mapConfigurationToFields(config);
 		mapConfigurationToFields(config.getConfigurationSection("messages"));
 
-		ConfigurationSection baseBlockSpeeds = config.getConfigurationSection("baseBlockSpeeds");
-		Objects.requireNonNull(baseBlockSpeeds)
-				.getKeys(false)
-				.forEach(key -> blockSpeeds.put(Material.valueOf(key), baseBlockSpeeds.getDouble(key)));
+		ConfigurationSection baseBlocks = config.getConfigurationSection("baseBlocks");
+		for (String block : Objects.requireNonNull(baseBlocks).getKeys(false)) {
+			Material material = Material.valueOf(block);
+			blockSpeeds.put(material, baseBlocks.getDouble(block + ".speed"));
+			if (baseBlocks.contains(block + ".music") && baseBlocks.getBoolean(block + ".music")) {
+				musicBlocks.add(material);
+			}
+		}
 
 		BiPredicate<List<String>, Material> anyMaterialMatch = (list, mat) -> list.stream()
 				.anyMatch(configMat -> mat.name()
@@ -126,8 +137,9 @@ public class BukkitConfig extends Config {
 		plugin.logDebug("Sign materials added: " + signMaterials);
 
 		try {
+			validate();
 			config.save(configFile);
-		} catch (IOException e) {
+		} catch (IOException | ConfigurationException e) {
 			throw new ConfigurationException("Could not save config to " + configFile, e);
 		}
 

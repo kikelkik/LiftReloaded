@@ -8,6 +8,10 @@ public class ConfigurationException extends ElevatorException {
 		super(message, cause);
 	}
 
+	public ConfigurationException(String message) {
+		super(message);
+	}
+
 	public ConfigurationException(Throwable cause) {
 		super(DEFAULT_MESSAGE, cause);
 	}

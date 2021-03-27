@@ -15,12 +15,14 @@ import org.bukkit.util.Vector;
 import com.minecraftcorp.lift.bukkit.LiftPlugin;
 import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
+import com.minecraftcorp.lift.bukkit.service.sound.SoundTask;
 
 public class ElevatorTask extends BukkitRunnable {
 
 	private static final BukkitConfig config = BukkitConfig.INSTANCE;
 	private static final LiftPlugin plugin = LiftPlugin.INSTANCE;
 	private final BukkitElevator elevator;
+	private final SoundTask soundTask;
 
 	public ElevatorTask(BukkitElevator elevator) {
 		this.elevator = elevator;
@@ -28,6 +30,8 @@ public class ElevatorTask extends BukkitRunnable {
 				.forEach(ElevatorExecutor::prepareEntityPhysics);
 
 		plugin.addActiveLift(elevator);
+		// TODO: sound konfigurierbar machen
+		soundTask = SoundTask.create(elevator);
 		runTaskTimer(plugin, 0, 2);
 	}
 
@@ -41,6 +45,8 @@ public class ElevatorTask extends BukkitRunnable {
 
 			plugin.removeActiveLift(elevator);
 			plugin.logDebug("Elevator finished");
+
+			soundTask.cancel();
 			cancel();
 			return;
 		}

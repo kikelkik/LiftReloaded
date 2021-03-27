@@ -21,8 +21,14 @@ buttonBlocks:
 signBlocks:
   - "*WALL_SIGN"
 redstone: false
-baseBlockSpeeds:
-  IRON_BLOCK: 0.5
+baseBlocks:
+  IRON_BLOCK:
+    speed: 0.5
+  NOTE_BLOCK:
+    speed: 0.2
+    music: true
+soundEnabled: true
+soundVolume: 70
 destination: "&1Dest"
 messages:
   oneFloor: "There is only one floor."
