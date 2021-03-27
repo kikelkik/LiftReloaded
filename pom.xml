@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.minecraftcorp</groupId>
+    <artifactId>lift-reloaded</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>Lift</name>
+    <description>Simple and easy Lifts and Elevators for Bukkit</description>
+    <url>https://github.com/croxis/Lift</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <bukkitVersion>1.16.4-R0.1-SNAPSHOT</bukkitVersion>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${bukkitVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.14</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.neatmonster</groupId>
+            <artifactId>nocheatplus</artifactId>
+            <version>3.16.0-RC</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <defaultGoal>clean install</defaultGoal>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>*.yml</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <outputDirectory>C:/Users/Jonas/Desktop/Server/plugins</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <!-- for nocheatplus -->
+            <id>md5-repo</id>
+            <url>http://repo.md-5.net/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+
+</project>
