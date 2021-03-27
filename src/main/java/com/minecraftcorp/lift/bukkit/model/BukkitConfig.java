@@ -154,6 +154,27 @@ public class BukkitConfig extends Config {
 		}
 	}
 
+	protected void validate() {
+		super.validate();
+		List<String> emptySets = new ArrayList<>();
+		if (blockSpeeds.isEmpty()) {
+			emptySets.add("blockSpeeds");
+		}
+		if (floorMaterials.isEmpty()) {
+			emptySets.add("floorMaterials");
+		}
+		if (signMaterials.isEmpty()) {
+			emptySets.add("signMaterials");
+		}
+		if (buttonMaterials.isEmpty()) {
+			emptySets.add("buttonMaterials");
+		}
+		if (!emptySets.isEmpty()) {
+			plugin.logWarn(String.join(", ", emptySets) + " is empty in config.yml. " +
+					"No Lift will work");
+		}
+	}
+
 	private void mapConfigurationToFields(ConfigurationSection section) {
 		if (section == null) {
 			return;
