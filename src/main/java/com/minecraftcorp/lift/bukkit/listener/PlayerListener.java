@@ -81,7 +81,7 @@ public class PlayerListener implements Listener {
 				return;
 			}
 			selectNextFloor(block, player);
-			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1); // TODO: use config volume as base
+			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, config.relativeVolume(1), 1); // TODO: use config volume as base
 			return;
 		}
 		// Start Elevator

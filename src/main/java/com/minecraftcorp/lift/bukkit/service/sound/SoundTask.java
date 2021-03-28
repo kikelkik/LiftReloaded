@@ -33,7 +33,7 @@ public abstract class SoundTask extends BukkitRunnable {
 	public synchronized void cancel() throws IllegalStateException {
 		super.cancel();
 		filterPlayers(elevator.getFreezers()).forEach(player -> player.playSound(player.getLocation(),
-				Sound.BLOCK_NOTE_BLOCK_BELL, 1, .5F));
+				Sound.BLOCK_NOTE_BLOCK_BELL, config.relativeVolume(1), .5F));
 	}
 
 	protected Stream<Player> filterPlayers(Collection<Entity> entities) {

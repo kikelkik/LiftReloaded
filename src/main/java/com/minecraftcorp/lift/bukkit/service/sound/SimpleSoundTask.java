@@ -12,15 +12,9 @@ public class SimpleSoundTask extends SoundTask {
 
 	@Override
 	public void run() {
-		filterPlayers(elevator.getPassengers()).forEach(
-				player -> {
-					player.playSound(player.getLocation(), Sound.ENTITY_BOAT_PADDLE_LAND, .8F, .5F);
-					player.playSound(player.getLocation(), Sound.BLOCK_BEEHIVE_WORK, .5F, .5F);
-				});
-	}
-
-	@Override
-	public synchronized void cancel() throws IllegalStateException {
-		super.cancel();
+		filterPlayers(elevator.getPassengers()).forEach(player -> {
+			player.playSound(player.getLocation(), Sound.ENTITY_BOAT_PADDLE_LAND, config.relativeVolume(.8), .5F);
+			player.playSound(player.getLocation(), Sound.BLOCK_BEEHIVE_WORK, config.relativeVolume(.5), .5F);
+		});
 	}
 }

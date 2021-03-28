@@ -42,6 +42,10 @@ public abstract class Config {
 	protected Boolean soundEnabled;
 	protected Integer soundVolume;
 
+	public float relativeVolume(double volume) {
+		return (float) (volume * soundVolume / 100.0);
+	}
+
 	protected static void copyDefaultConfig(LiftPlugin plugin, File dest) {
 		try (InputStream in = plugin.getResource("config.yml")) {
 			if (in == null) {
