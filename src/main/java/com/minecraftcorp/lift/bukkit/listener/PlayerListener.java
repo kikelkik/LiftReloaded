@@ -1,6 +1,5 @@
 package com.minecraftcorp.lift.bukkit.listener;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +57,7 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (!Arrays.asList(Action.RIGHT_CLICK_BLOCK, Action.LEFT_CLICK_BLOCK).contains(event.getAction())) {
+		if (Action.RIGHT_CLICK_BLOCK != event.getAction()) {
 			return;
 		}
 		Player player = event.getPlayer();
