@@ -72,6 +72,7 @@ public class PlayerListener implements Listener {
 				Permission.sendMessage(player, Permission.CHANGE);
 				return;
 			}
+			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, config.relativeVolume(1), 1);
 			UUID uuid = player.getUniqueId();
 			if (activeScrollSelects.containsKey(uuid)) {
 				activeScrollSelects.remove(uuid);
@@ -85,7 +86,6 @@ public class PlayerListener implements Listener {
 				return;
 			}
 			selectNextFloor(block, player);
-			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, config.relativeVolume(1), 1);
 			return;
 		}
 		// Start Elevator
@@ -115,6 +115,7 @@ public class PlayerListener implements Listener {
 			player.sendMessage(messages.getScrollSelectDisabled());
 			return;
 		}
+		player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, config.relativeVolume(1), 2);
 		setDestToNext(floorSign, player, scrollForwards);
 	}
 
