@@ -230,7 +230,7 @@ public class PlayerListener implements Listener {
 	}
 
 	private void handleElevatorException(Player player, ElevatorException e) {
-		player.sendMessage("An internal error occurred while trying to process a lift");
+		player.sendMessage("§cAn internal error occurred while trying to process a lift");
 		plugin.logError("An error occurred while trying to process a lift", e);
 	}
 

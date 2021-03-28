@@ -27,7 +27,6 @@ shaftBlocks:
   - TORCH
   - VINE
   - WATER
-  - RAIL
   - "*RAIL"
   - REDSTONE_WIRE
 redstone: false
@@ -42,11 +41,12 @@ soundVolume: 100
 messages:
   destination: "&1Dest"
   currentFloor: "Current Floor"
-  oneFloor: "&7There is only one floor."
   cantEnter: "&7Can't enter elevator in use"
   cantLeave: "&7Can't leave elevator in use"
+  oneFloor: "&7There is only one floor."
   unsafe: "&cIt is unsafe to leave a vehicle in a lift!"
   floorNotExists: "&cFloor does not exist. Check shaft for blockage"
-  floorLevelNotFound: "&cCould not find floor with level "
+  noBaseBlock: "&cThere is no base block for this lift"
   scrollSelectEnabled: "&7Scrollable floor selection enabled. Click on sign with an item for default mode"
   scrollSelectDisabled: "&7Scrollable floor selection disabled"
+  timeout: "&7You have been teleported to destination due to timeout"

@@ -95,7 +95,7 @@ public abstract class Elevator {
 			// Fallback to next floor if level doesn't exist
 			Optional<Floor> next = getNextFloor(startFloor, startFloor);
 			if (!next.isPresent()) {
-				throw new ElevatorException(messages.getFloorLevelNotFound() + level);
+				throw new ElevatorException(messages.getFloorNotExists() + level);
 			}
 			return next.get();
 		}
@@ -103,7 +103,7 @@ public abstract class Elevator {
 				.filter(f -> f.getLevel() == level)
 				.findFirst();
 		if (!floor.isPresent()) {
-			throw new ElevatorUsageException(messages.getFloorLevelNotFound() + level);
+			throw new ElevatorUsageException(messages.getFloorNotExists() + level);
 		}
 		return floor.get();
 	}

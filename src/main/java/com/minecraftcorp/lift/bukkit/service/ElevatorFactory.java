@@ -27,6 +27,7 @@ import com.minecraftcorp.lift.common.exception.ElevatorUsageException;
 import com.minecraftcorp.lift.common.model.Elevator;
 import com.minecraftcorp.lift.common.model.Floor;
 import com.minecraftcorp.lift.common.model.FloorSign;
+import com.minecraftcorp.lift.common.model.Messages;
 
 import lombok.experimental.UtilityClass;
 
@@ -34,6 +35,7 @@ import lombok.experimental.UtilityClass;
 public class ElevatorFactory {
 
 	public static final BukkitConfig config = BukkitConfig.INSTANCE;
+	public static final Messages messages = Messages.INSTANCE;
 	public static final LiftPlugin plugin = LiftPlugin.INSTANCE;
 
 	public static Optional<BukkitElevator> createElevator(Block buttonBlock) {
@@ -43,11 +45,11 @@ public class ElevatorFactory {
 
 		Set<Block> baseBlocks = findBaseBlocksBelow(buttonBlock);
 		if (baseBlocks.isEmpty()) {
-			throw new ElevatorUsageException("There is no base block for this lift");
+			throw new ElevatorUsageException(messages.getNoBaseBlock());
 		}
 		List<Floor> floors = createFloors(baseBlocks);
 		if (floors.size() <= 1) {
-			throw new ElevatorUsageException("There is no other floor");
+			throw new ElevatorUsageException(messages.getOneFloor());
 		}
 		plugin.logDebug("Found " + baseBlocks.size() + " base blocks and " + floors.size() + " floors");
 		Floor startFloor = getStartFloor(buttonBlock, floors);

@@ -16,10 +16,12 @@ import com.minecraftcorp.lift.bukkit.LiftPlugin;
 import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
 import com.minecraftcorp.lift.bukkit.service.sound.SoundTask;
+import com.minecraftcorp.lift.common.model.Messages;
 
 public class ElevatorTask extends BukkitRunnable {
 
 	private static final BukkitConfig config = BukkitConfig.INSTANCE;
+	private static final Messages messages = Messages.INSTANCE;
 	private static final LiftPlugin plugin = LiftPlugin.INSTANCE;
 	private final BukkitElevator elevator;
 	private SoundTask soundTask;
@@ -83,7 +85,7 @@ public class ElevatorTask extends BukkitRunnable {
 		passengers.stream()
 				.filter(Player.class::isInstance)
 				.map(Player.class::cast)
-				.forEach(player -> player.sendMessage("§7You have been teleported to destination due to timeout"));
+				.forEach(player -> player.sendMessage(messages.getTimeout()));
 		elevator.addFreezers(passengers);
 	}
 
