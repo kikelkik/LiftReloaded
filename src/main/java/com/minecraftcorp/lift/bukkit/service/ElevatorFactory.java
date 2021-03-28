@@ -111,7 +111,7 @@ public class ElevatorFactory {
 
 				Block block = world.getBlockAt(x, y, z);
 				if (!isValidShaftBlock(block)) {
-					break; // continue with next base block
+					return floors;
 				}
 				if (config.isValidLiftStructureFromButton(block)) {
 					buttons.add(block);
