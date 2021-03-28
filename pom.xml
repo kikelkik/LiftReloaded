@@ -17,6 +17,8 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <bukkitVersion>1.16.4-R0.1-SNAPSHOT</bukkitVersion>
+        <!-- for local development: choose where to put the compiled plugin jar -->
+        <plugin.directory>target</plugin.directory>
     </properties>
 
     <dependencies>
