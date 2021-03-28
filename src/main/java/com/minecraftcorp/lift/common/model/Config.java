@@ -24,9 +24,7 @@ public abstract class Config {
 	protected Integer maxLiftArea;
 	protected Integer maxHeight;
 	protected Boolean autoPlace;
-	protected Boolean checkFloor;
 	protected Boolean serverFlight;
-	protected Boolean liftMobs;
 	protected Boolean preventEntry;
 	protected Boolean preventLeave;
 	protected Boolean mouseScroll;
