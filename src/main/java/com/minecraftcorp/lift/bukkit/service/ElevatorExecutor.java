@@ -42,7 +42,6 @@ public class ElevatorExecutor {
 
 		elevator.addPassengers(passengers);
 		elevator.addFreezers(freezers);
-		// TODO: Minecart?
 		if (config.getAutoPlace()) {
 			tpPassengersToFloor(elevator, elevator.getStartFloor());
 		}
