@@ -1,4 +1,4 @@
-author: kikelkik
+author: croxis, kikelkik
 database: false
 generator: http://dinnerbone.com/minecraft/tools/pluginator/
 main: com.minecraftcorp.lift.bukkit.LiftPlugin

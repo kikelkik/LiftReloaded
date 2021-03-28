@@ -60,14 +60,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <outputDirectory>C:/Users/Jonas/Desktop/Server/plugins</outputDirectory>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 

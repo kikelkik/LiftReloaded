@@ -48,7 +48,7 @@ public class LiftPlugin extends JavaPlugin {
 		}
 
 		noteBlockAPIEnabled = Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI");
-		if (noteBlockAPIEnabled) {
+		if (!noteBlockAPIEnabled) {
 			logWarn("*** NoteBlockAPI is not installed or not enabled. ***");
 		}
 	}
