@@ -155,7 +155,7 @@ public class PlayerListener implements Listener {
 		Location baseFloor = quitInElevator.get(uuid);
 		getVehicleOfPlayer(player).ifPresent(ElevatorExecutor::resetEntityPhysics);
 		ElevatorExecutor.resetEntityPhysics(player);
-		player.teleport(baseFloor, PlayerTeleportEvent.TeleportCause.PLUGIN); // TODO: Fallschaden
+		player.teleport(baseFloor, PlayerTeleportEvent.TeleportCause.PLUGIN); // FIXME: sometimes fall damage
 		plugin.logDebug(player.getName() + " logged out in an elevator. Teleported to base floor at " + baseFloor);
 	}
 
