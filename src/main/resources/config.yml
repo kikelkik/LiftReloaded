@@ -9,6 +9,7 @@ debug: false
 autoPlace: false
 preventEntry: false
 preventLeave: true
+liftMobs: true
 mouseScroll: true
 secondsUntilTimeout: 2
 floorBlocks:

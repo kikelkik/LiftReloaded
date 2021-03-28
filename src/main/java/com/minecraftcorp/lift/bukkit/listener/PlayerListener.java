@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,13 +19,14 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.util.Vector;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import com.minecraftcorp.lift.bukkit.LiftPlugin;
@@ -145,7 +147,7 @@ public class PlayerListener implements Listener {
 		elevator.removeFreezers(Collections.singletonList(player));
 	}
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	@EventHandler(ignoreCancelled = true)
 	public void onLogin(PlayerSpawnLocationEvent event) {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueId();
@@ -157,6 +159,40 @@ public class PlayerListener implements Listener {
 		ElevatorExecutor.resetEntityPhysics(player);
 		player.teleport(baseFloor, PlayerTeleportEvent.TeleportCause.PLUGIN); // FIXME: sometimes fall damage
 		plugin.logDebug(player.getName() + " logged out in an elevator. Teleported to base floor at " + baseFloor);
+	}
+
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event) {
+		if (!config.getPreventEntry()) {
+			return;
+		}
+		Player player = event.getPlayer();
+		boolean playerInShaft = plugin.getActiveLifts()
+				.stream()
+				.anyMatch(elevator -> !elevator.isOutsideShaft(player));
+		if (!playerInShaft) {
+			return;
+		}
+		boolean playerRidesLift = plugin.getActiveLifts()
+				.stream()
+				.flatMap(elevator -> Stream.concat(elevator.getPassengers()
+						.stream(), elevator.getFreezers()
+						.stream()))
+				.filter(Player.class::isInstance)
+				.anyMatch(entity -> entity.equals(player));
+		if (playerRidesLift) {
+			return;
+		}
+		player.sendMessage(messages.getCantEnter());
+		Location to = event.getTo();
+		if (to == null) {
+			plugin.logWarn("Could not prevent lift entry for " + player.getName() + " at " + player.getLocation());
+			return;
+		}
+		Vector pushBack = player.getVelocity().subtract(to.toVector())
+				.normalize()
+				.multiply(.3);
+		player.setVelocity(pushBack);
 	}
 
 	private void selectNextFloor(Block signBlock, Player player) {
