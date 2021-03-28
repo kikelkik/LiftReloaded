@@ -35,11 +35,11 @@ public class BukkitElevator extends Elevator {
 	private final Set<BlockState> blockCache = new HashSet<>();
 	private BoundingBox shaftArea;
 
-	public BukkitElevator(Set<Block> baseBlocks, Floor startFloor, List<Floor> floors) {
+	public BukkitElevator(Set<Block> baseBlocks, Floor startFloor, List<Floor> floors, BukkitFloorSign initialSign) {
 		super(floors, startFloor, baseBlocks.stream()
 				.map(BukkitConfig.INSTANCE::getBlockSpeed)
 				.findAny()
-				.orElse(DEFAULT_SPEED));
+				.orElse(DEFAULT_SPEED), initialSign);
 		this.baseBlocks = baseBlocks;
 	}
 

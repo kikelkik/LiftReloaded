@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.minecraftcorp.lift.common.exception.ElevatorChangeException;
+import com.minecraftcorp.lift.common.exception.ElevatorException;
 import com.minecraftcorp.lift.common.exception.ElevatorUsageException;
 
 import lombok.Getter;
@@ -18,15 +19,17 @@ public abstract class Elevator {
 	protected final List<Floor> floors;
 	private final Floor startFloor;
 	private Floor destFloor;
+	private FloorSign initialSign;
 
 	private final double speed;
 	private long startTime;
 	private long maxEndTime;
 
-	public Elevator(List<Floor> floors, Floor startFloor, double speed) {
+	public Elevator(List<Floor> floors, Floor startFloor, double speed, FloorSign initialSign) {
 		this.floors = floors;
 		this.startFloor = startFloor;
 		this.speed = speed;
+		this.initialSign = initialSign;
 	}
 
 	public abstract Config getConfig();
@@ -42,15 +45,15 @@ public abstract class Elevator {
 	}
 
 	public void setDestFloorFromSign() {
-		destFloor = getFloorByLevel(startFloor.getSign().readDestLevel());
+		destFloor = getFloorByLevel(getInitialSign().readDestLevel());
 	}
 
 	public Optional<Floor> getNextFloor(Floor currentFloor, Floor exempt) {
 		if (floors.size() == 1) {
 			return Optional.empty();
 		}
-		int currentIndex = floors.indexOf(currentFloor);
-		Floor next = currentIndex == floors.size() - 1 ? floors.get(0) : floors.get(currentIndex + 1);
+		int currentLevel = currentFloor.getLevel();
+		Floor next = currentLevel < floors.size() ? getFloorByLevel(currentLevel + 1) : getFloorByLevel(1);
 		if (next.equals(exempt)) {
 			return getNextFloor(next, exempt);
 		}
@@ -61,8 +64,8 @@ public abstract class Elevator {
 		if (floors.size() == 1) {
 			return Optional.empty();
 		}
-		int currentIndex = floors.indexOf(currentFloor);
-		Floor previous = currentIndex == 0 ? floors.get(floors.size() - 1) : floors.get(currentIndex - 1);
+		int currentLevel = currentFloor.getLevel();
+		Floor previous = currentLevel > 1 ? getFloorByLevel(currentLevel - 1) : getFloorByLevel(floors.size());
 		if (previous.equals(exempt)) {
 			return getPreviousFloor(previous, exempt);
 		}
@@ -77,8 +80,7 @@ public abstract class Elevator {
 
 	public Floor getFloorBySign(FloorSign floorSign) {
 		Optional<Floor> floor = floors.stream()
-				.filter(f -> f.getSign()
-						.equals(floorSign))
+				.filter(f -> f.getSigns().contains(floorSign))
 				.findFirst();
 		if (!floor.isPresent()) {
 			throw new ElevatorChangeException("Could not find floor that belongs to clicked floor sign");
@@ -87,11 +89,19 @@ public abstract class Elevator {
 	}
 
 	public Floor getFloorByLevel(int level) {
+		if (level > floors.size()) {
+			// Fallback to next floor if level doesn't exist
+			Optional<Floor> next = getNextFloor(startFloor, startFloor);
+			if (!next.isPresent()) {
+				throw new ElevatorException("Could not find floor with level " + level);
+			}
+			return next.get();
+		}
 		Optional<Floor> floor = floors.stream()
 				.filter(f -> f.getLevel() == level)
 				.findFirst();
 		if (!floor.isPresent()) {
-			throw new ElevatorUsageException("Could not find floor with level " + level); // TODO: retry with floor-recalculation
+			throw new ElevatorUsageException("Could not find floor with level " + level);
 		}
 		return floor.get();
 	}

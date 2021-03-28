@@ -7,7 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -22,6 +26,7 @@ import com.minecraftcorp.lift.common.exception.ElevatorCreateException;
 import com.minecraftcorp.lift.common.exception.ElevatorUsageException;
 import com.minecraftcorp.lift.common.model.Elevator;
 import com.minecraftcorp.lift.common.model.Floor;
+import com.minecraftcorp.lift.common.model.FloorSign;
 
 import lombok.experimental.UtilityClass;
 
@@ -46,20 +51,32 @@ public class ElevatorFactory {
 		}
 		plugin.logDebug("Found " + baseBlocks.size() + " base blocks and " + floors.size() + " floors");
 		Floor startFloor = getStartFloor(buttonBlock, floors);
-		BukkitElevator elevator = new BukkitElevator(baseBlocks, startFloor, floors);
+		BukkitElevator elevator = new BukkitElevator(baseBlocks, startFloor, floors, findInitialSign(buttonBlock, startFloor));
 		floors.stream()
-				.map(Floor::getSign)
+				.flatMap(floor -> floor.getSigns().stream())
 				.forEach(sign -> sign.setElevator(elevator));
 		writeEmptyFloorSigns(elevator);
 		return Optional.of(elevator);
+	}
+
+	private static BukkitFloorSign findInitialSign(Block buttonBlock, Floor startFloor) {
+		BiFunction<BukkitFloorSign, Function<Location, Integer>, Integer> getCoord = (sign, locFunc) -> locFunc.apply(
+				sign.getSign().getLocation());
+		return startFloor.getSigns()
+				.stream()
+				.map(BukkitFloorSign.class::cast)
+				.filter(sign -> getCoord.apply(sign, Location::getBlockX) == buttonBlock.getX())
+				.filter(sign -> getCoord.apply(sign, Location::getBlockZ) == buttonBlock.getZ())
+				.findFirst()
+				.orElseThrow(() -> new ElevatorCreateException("Could not extract initial floor sign from start floor"));
 	}
 
 	public static void writeEmptyFloorSigns(Elevator elevator) {
 		List<Floor> floors = elevator.getFloors();
 		for (int level = 0; level < floors.size(); level++) {
 			Floor current = floors.get(level);
-			if (current.getSign().isEmpty()) {
-				current.updateSign(floors.get(level == floors.size() - 1 ? 0 : level + 1));
+			if (current.getSigns().isEmpty()) {
+				current.updateSigns(floors.get(level == floors.size() - 1 ? 0 : level + 1));
 			}
 		}
 	}
@@ -83,7 +100,7 @@ public class ElevatorFactory {
 		int level = 1;
 		World world = firstBase.get().getWorld();
 		for (int y = firstBase.get().getY() + 1; y < config.getMaxHeight(); y++) {
-			boolean floorFound = false;
+			List<Block> buttons = new ArrayList<>();
 			for (Block baseBlock : baseBlocks) {
 				int x = baseBlock.getX();
 				int z = baseBlock.getZ();
@@ -93,22 +110,36 @@ public class ElevatorFactory {
 					break; // continue with next base block
 				}
 				if (config.isValidLiftStructureFromButton(block)) {
-					floors.add(createFloor(block, level));
-					floorFound = true;
+					buttons.add(block);
 				}
 			}
-			if (floorFound) {
+			if (!buttons.isEmpty()) {
+				floors.add(createFloor(buttons, level));
 				level++;
 			}
 		}
 		return floors;
 	}
 
-	private static Floor createFloor(Block buttonBlock, int level) {
-		BukkitFloorSign floorSign = new BukkitFloorSign(((Sign) buttonBlock.getRelative(BlockFace.UP).getState()));
-		Block belowButton = buttonBlock.getRelative(BlockFace.DOWN);
-		String name = config.isSign(belowButton) ? ((Sign) belowButton.getState()).getLine(1) : "";
-		return new Floor(level, name, buttonBlock.getY(), floorSign);
+	private static Floor createFloor(List<Block> buttonBlocks, int level) {
+		if (buttonBlocks.isEmpty()) {
+			throw new ElevatorCreateException("Cannot create floor with no button blocks");
+		}
+		List<FloorSign> floorSigns = buttonBlocks.stream()
+				.map(button -> button.getRelative(BlockFace.UP))
+				.map(Block::getState)
+				.map(Sign.class::cast)
+				.map(BukkitFloorSign::new)
+				.collect(Collectors.toList());
+		String floorName = buttonBlocks.stream()
+				.map(block -> block.getRelative(BlockFace.DOWN))
+				.filter(config::isSign)
+				.map(Block::getState)
+				.map(Sign.class::cast)
+				.map(sign -> sign.getLine(1))
+				.findFirst()
+				.orElse("");
+		return new Floor(level, floorName, buttonBlocks.get(0).getY(), floorSigns);
 	}
 
 	private static Set<Block> findBaseBlocksBelow(Block startBlock) {

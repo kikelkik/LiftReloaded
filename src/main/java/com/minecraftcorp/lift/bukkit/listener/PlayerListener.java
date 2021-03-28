@@ -159,15 +159,13 @@ public class PlayerListener implements Listener {
 		if (config.getMouseScroll() && isEmptyHand(player)) {
 			elevator.getFloorFromY(button.getY())
 					.ifPresent(floor -> {
-						activeScrollSelects.put(player.getUniqueId(), floor.getSign());
+						activeScrollSelects.put(player.getUniqueId(), elevator.getInitialSign());
 						player.sendMessage(config.getScrollSelectEnabled());
 					});
 			return;
 		}
 		// select by click
-		Floor currentFloor = currentFloorOpt.get();
-		FloorSign floorSign = currentFloor.getSign();
-		setDestToNext(floorSign, player, true);
+		setDestToNext(elevator.getInitialSign(), player, true);
 	}
 
 	private void createAndRunElevator(Block buttonBlock, Player player) {
@@ -207,7 +205,7 @@ public class PlayerListener implements Listener {
 				return;
 			}
 			elevator.setDestFloor(nextFloor.get());
-			currentFloor.updateSign(nextFloor.get());
+			currentFloor.updateSigns(nextFloor.get());
 		} catch (ElevatorUsageException e) {
 			catchElevatorUsageException(player, e);
 		} catch (ElevatorException e) {

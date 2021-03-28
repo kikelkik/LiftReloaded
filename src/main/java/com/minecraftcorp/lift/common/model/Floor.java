@@ -1,5 +1,7 @@
 package com.minecraftcorp.lift.common.model;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -10,14 +12,14 @@ public class Floor implements Comparable<Floor> {
 	protected final int level;
 	protected final String name;
 	protected final int buttonY;
-	protected final FloorSign sign;
+	protected final List<FloorSign> signs;
 
 	public int getFloorY() {
 		return buttonY - 2;
 	}
 
-	public void updateSign(Floor destination) {
-		sign.updateSign(this, destination);
+	public void updateSigns(Floor destination) {
+		signs.forEach(sign -> sign.updateSign(this, destination));
 	}
 
 	@Override
