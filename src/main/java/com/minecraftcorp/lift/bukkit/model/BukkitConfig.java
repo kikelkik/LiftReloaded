@@ -118,33 +118,16 @@ public class BukkitConfig extends Config {
 			}
 		}
 
-		BiPredicate<List<String>, Material> anyMaterialMatch = (list, mat) -> list.stream()
-				.anyMatch(configMat -> mat.name()
-						.matches(configMat.toUpperCase()
-								.replace("*", ".*?")));
-
-		List<String> configFloorMaterials = config.getStringList("floorBlocks");
-		Arrays.stream(Material.values())
-				.filter(material -> anyMaterialMatch.test(configFloorMaterials, material))
-				.forEach(floorMaterials::add);
+		fillMaterialFromConfig(config, "floorBlocks", floorMaterials);
 		plugin.logDebug("Floor materials added: " + floorMaterials);
 
-		List<String> configButtonMaterials = config.getStringList("buttonBlocks");
-		Arrays.stream(Material.values())
-				.filter(material -> anyMaterialMatch.test(configButtonMaterials, material))
-				.forEach(buttonMaterials::add);
+		fillMaterialFromConfig(config, "buttonBlocks", buttonMaterials);
 		plugin.logDebug("Button materials added: " + buttonMaterials);
 
-		List<String> configSignMaterials = config.getStringList("signBlocks");
-		Arrays.stream(Material.values())
-				.filter(mat -> anyMaterialMatch.test(configSignMaterials, mat))
-				.forEach(signMaterials::add);
+		fillMaterialFromConfig(config, "signBlocks", signMaterials);
 		plugin.logDebug("Sign materials added: " + signMaterials);
 
-		List<String> configShaftMaterials = config.getStringList("shaftBlocks");
-		Arrays.stream(Material.values())
-				.filter(mat -> anyMaterialMatch.test(configShaftMaterials, mat))
-				.forEach(shaftBlocks::add);
+		fillMaterialFromConfig(config, "shaftBlocks", shaftBlocks);
 		plugin.logDebug("Allowed shaft blocks added: " + shaftBlocks);
 
 		try {
@@ -184,6 +167,20 @@ public class BukkitConfig extends Config {
 			plugin.logWarn(String.join(", ", emptySets) + " is empty in config.yml. " +
 					"No Lift will work");
 		}
+	}
+
+	private void fillMaterialFromConfig(YamlConfiguration config, String configKey, Set<Material> materialSet) {
+		List<String> configShaftMaterials = config.getStringList(configKey);
+		Arrays.stream(Material.values())
+				.filter(mat -> anyMaterialMatch().test(configShaftMaterials, mat))
+				.forEach(materialSet::add);
+	}
+
+	private static BiPredicate<List<String>, Material> anyMaterialMatch() {
+		return (list, mat) -> list.stream()
+				.anyMatch(configMat -> mat.name()
+						.matches(configMat.toUpperCase()
+								.replace("*", ".*?")));
 	}
 
 	private void mapConfigurationToFields(ConfigurationSection section) {

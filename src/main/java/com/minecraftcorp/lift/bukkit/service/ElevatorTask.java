@@ -47,7 +47,9 @@ public class ElevatorTask extends BukkitRunnable {
 			plugin.removeActiveLift(elevator);
 			plugin.logDebug("Elevator finished");
 
-			soundTask.cancel();
+			if (soundTask != null) {
+				soundTask.cancel();
+			}
 			cancel();
 			return;
 		}
