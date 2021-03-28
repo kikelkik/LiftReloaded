@@ -75,7 +75,9 @@ public class ElevatorFactory {
 		List<Floor> floors = elevator.getFloors();
 		for (int level = 0; level < floors.size(); level++) {
 			Floor current = floors.get(level);
-			if (current.getSigns().isEmpty()) {
+			boolean anyEmpty = current.getSigns().stream()
+					.anyMatch(FloorSign::isEmpty);
+			if (anyEmpty) {
 				current.updateSigns(floors.get(level == floors.size() - 1 ? 0 : level + 1));
 			}
 		}
