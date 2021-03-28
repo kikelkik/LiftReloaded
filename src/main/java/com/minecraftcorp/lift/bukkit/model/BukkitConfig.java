@@ -2,7 +2,6 @@ package com.minecraftcorp.lift.bukkit.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,6 +24,8 @@ import com.minecraftcorp.lift.bukkit.LiftPlugin;
 import com.minecraftcorp.lift.common.exception.ConfigurationException;
 import com.minecraftcorp.lift.common.exception.ElevatorException;
 import com.minecraftcorp.lift.common.model.Config;
+import com.minecraftcorp.lift.common.model.Messages;
+import com.minecraftcorp.lift.common.util.ConfigReader;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,7 +33,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Note that fields that are configurable in config.yml should have the same name, so
- * {@link #mapConfigurationToFields )} maps values correctly to fields of this class.
+ * {@link ConfigReader#mapConfigurationToFields )} maps values correctly to fields of this class.
  * For that mapping, you should use boxed types instead of primitive types (Integer instead of int, ...)
  */
 @Getter
@@ -106,8 +107,8 @@ public class BukkitConfig extends Config {
 		// defaultConfig was just temporarily for setting default config values
 		deleteDefaultConfig(plugin, defaultConfigFile);
 
-		mapConfigurationToFields(config);
-		mapConfigurationToFields(config.getConfigurationSection("messages"));
+		mapConfiguration(config, this, Config.class);
+		mapConfiguration(config.getConfigurationSection("messages"), Messages.INSTANCE, Messages.class);
 
 		ConfigurationSection baseBlocks = config.getConfigurationSection("baseBlocks");
 		for (String block : Objects.requireNonNull(baseBlocks).getKeys(false)) {
@@ -148,6 +149,16 @@ public class BukkitConfig extends Config {
 		}
 	}
 
+	private void mapConfiguration(ConfigurationSection section, Object object, Class<?> clazz) {
+		if (section == null) return;
+
+		BiFunction<String, Class<?>, Object> valueResolver = (name, fieldType) ->
+				fieldType != String.class ? section.getObject(name, fieldType) : section.getString(name)
+						.replace("&", "§");
+
+		ConfigReader.mapConfigurationToFields(section.getKeys(false), object, valueResolver, clazz);
+	}
+
 	protected void validate() {
 		super.validate();
 		List<String> emptySets = new ArrayList<>();
@@ -183,30 +194,7 @@ public class BukkitConfig extends Config {
 								.replace("*", ".*?")));
 	}
 
-	private void mapConfigurationToFields(ConfigurationSection section) {
-		if (section == null) {
-			return;
-		}
-		Class<? extends Config> clazz = Config.class;
-		Map<String, Field> classFields = Arrays.stream(clazz.getDeclaredFields())
-				.collect(Collectors.toMap(Field::getName, field -> field));
 
-		section.getKeys(false)
-				.stream()
-				.filter(classFields::containsKey)
-				.forEach(name -> {
-					try {
-						Field field = classFields.get(name);
-						Class<?> fieldType = field.getType();
-						Object value = fieldType != String.class ? section.getObject(name, fieldType) : section.getString(name)
-								.replace("&", "§");
-						field.setAccessible(true);
-						field.set(this, value);
-					} catch (IllegalAccessException e) {
-						throw new ConfigurationException("Error while mapping configuration to class fields", e);
-					}
-				});
-	}
 
 	private static YamlConfiguration getDefaultConfig(LiftPlugin plugin, File defaultConfigFile) {
 		copyDefaultConfig(plugin, defaultConfigFile);

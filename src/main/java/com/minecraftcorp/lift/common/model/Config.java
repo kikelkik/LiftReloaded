@@ -30,14 +30,6 @@ public abstract class Config {
 	protected Boolean preventEntry;
 	protected Boolean preventLeave;
 	protected Boolean mouseScroll;
-	protected String destination;
-	protected String currentFloor;
-	protected String oneFloor;
-	protected String cantEnter;
-	protected String cantLeave;
-	protected String unsafe;
-	protected String scrollSelectEnabled;
-	protected String scrollSelectDisabled;
 	protected Integer secondsUntilTimeout;
 	protected Boolean soundEnabled;
 	protected Integer soundVolume;

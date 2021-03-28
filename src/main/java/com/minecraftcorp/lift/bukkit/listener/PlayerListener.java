@@ -38,6 +38,7 @@ import com.minecraftcorp.lift.common.exception.ElevatorUsageException;
 import com.minecraftcorp.lift.common.model.Elevator;
 import com.minecraftcorp.lift.common.model.Floor;
 import com.minecraftcorp.lift.common.model.FloorSign;
+import com.minecraftcorp.lift.common.model.Messages;
 import com.minecraftcorp.lift.common.model.Permission;
 import com.minecraftcorp.lift.common.util.Calculator;
 
@@ -45,6 +46,7 @@ public class PlayerListener implements Listener {
 
 	private final LiftPlugin plugin = LiftPlugin.INSTANCE;
 	private final BukkitConfig config = BukkitConfig.INSTANCE;
+	private final Messages messages = Messages.INSTANCE;
 	private final Map<UUID, FloorSign> activeScrollSelects = new HashMap<>();
 	private final Map<UUID, Location> quitInElevator = new HashMap<>();
 
@@ -72,7 +74,7 @@ public class PlayerListener implements Listener {
 			if (activeScrollSelects.containsKey(uuid)) {
 				activeScrollSelects.remove(uuid);
 				event.setCancelled(true);
-				player.sendMessage(config.getScrollSelectDisabled());
+				player.sendMessage(messages.getScrollSelectDisabled());
 				return;
 			}
 			if (((Sign) block.getState()).getLine(0).isEmpty()) {
@@ -108,7 +110,7 @@ public class PlayerListener implements Listener {
 				.isPresent();
 		if (tooFarAway) {
 			activeScrollSelects.remove(player.getUniqueId());
-			player.sendMessage(config.getScrollSelectDisabled());
+			player.sendMessage(messages.getScrollSelectDisabled());
 			return;
 		}
 		setDestToNext(floorSign, player, scrollForwards);
@@ -166,7 +168,7 @@ public class PlayerListener implements Listener {
 		BukkitElevator elevator = elevatorOpt.get();
 		Optional<Floor> currentFloorOpt = elevator.getFloorFromY(button.getY());
 		if (!currentFloorOpt.isPresent()) {
-			player.sendMessage("Floor does not exist. Check shaft for blockage");
+			player.sendMessage(messages.getFloorNotExists());
 			return;
 		}
 		// select by scroll
@@ -174,7 +176,7 @@ public class PlayerListener implements Listener {
 			elevator.getFloorFromY(button.getY())
 					.ifPresent(floor -> {
 						activeScrollSelects.put(player.getUniqueId(), elevator.getInitialSign());
-						player.sendMessage(config.getScrollSelectEnabled());
+						player.sendMessage(messages.getScrollSelectEnabled());
 					});
 			return;
 		}
@@ -215,7 +217,7 @@ public class PlayerListener implements Listener {
 			Floor destFloor = elevator.getFloorByLevel(destLevel);
 			Optional<Floor> nextFloor = isNextAbove ? elevator.getNextFloor(destFloor, currentFloor) : elevator.getPreviousFloor(destFloor, currentFloor);
 			if (!nextFloor.isPresent()) {
-				player.sendMessage(config.getOneFloor());
+				player.sendMessage(messages.getOneFloor());
 				return;
 			}
 			elevator.setDestFloor(nextFloor.get());

@@ -39,12 +39,14 @@ baseBlocks:
     music: true
 soundEnabled: true
 soundVolume: 100
-destination: "&1Dest"
 messages:
-  oneFloor: "There is only one floor."
+  destination: "&1Dest"
   currentFloor: "Current Floor"
-  cantEnter: "Can't enter elevator in use"
-  cantLeave: "Can't leave elevator in use"
-  unsafe: "It is unsafe to leave a vehicle in a lift!"
+  oneFloor: "&7There is only one floor."
+  cantEnter: "&7Can't enter elevator in use"
+  cantLeave: "&7Can't leave elevator in use"
+  unsafe: "&cIt is unsafe to leave a vehicle in a lift!"
+  floorNotExists: "&cFloor does not exist. Check shaft for blockage"
+  floorLevelNotFound: "&cCould not find floor with level "
   scrollSelectEnabled: "&7Scrollable floor selection enabled. Click on sign with an item for default mode"
   scrollSelectDisabled: "&7Scrollable floor selection disabled"

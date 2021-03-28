@@ -9,12 +9,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 
 import com.minecraftcorp.lift.bukkit.LiftPlugin;
-import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
+import com.minecraftcorp.lift.common.model.Messages;
 
 public class VehicleListener implements Listener {
 
 	private final LiftPlugin plugin = LiftPlugin.INSTANCE;
-	private final BukkitConfig config = BukkitConfig.INSTANCE;
+	private final Messages messages = Messages.INSTANCE;
 
 	public VehicleListener() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, LiftPlugin.INSTANCE);
@@ -30,7 +30,7 @@ public class VehicleListener implements Listener {
 			return;
 		}
 		if (ejector instanceof Player) {
-			ejector.sendMessage(config.getUnsafe());
+			ejector.sendMessage(messages.getUnsafe());
 		}
 		event.setCancelled(true);
 		plugin.logDebug("Canceled ejection for " + ejector);

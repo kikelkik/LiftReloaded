@@ -4,7 +4,6 @@ import org.bukkit.block.Sign;
 
 import com.minecraftcorp.lift.common.exception.ElevatorChangeException;
 import com.minecraftcorp.lift.common.exception.ElevatorException;
-import com.minecraftcorp.lift.common.model.Config;
 import com.minecraftcorp.lift.common.model.Floor;
 import com.minecraftcorp.lift.common.model.FloorSign;
 
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BukkitFloorSign extends FloorSign {
 
-	private final Config config = BukkitConfig.INSTANCE;
 	private final Sign sign;
 
 	@Override

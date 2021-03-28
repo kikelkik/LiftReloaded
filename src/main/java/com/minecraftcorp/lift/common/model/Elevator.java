@@ -16,6 +16,8 @@ import lombok.Setter;
 @Setter
 public abstract class Elevator {
 
+	private static final Messages messages = Messages.INSTANCE;
+
 	protected final List<Floor> floors;
 	private final Floor startFloor;
 	private Floor destFloor;
@@ -93,7 +95,7 @@ public abstract class Elevator {
 			// Fallback to next floor if level doesn't exist
 			Optional<Floor> next = getNextFloor(startFloor, startFloor);
 			if (!next.isPresent()) {
-				throw new ElevatorException("Could not find floor with level " + level);
+				throw new ElevatorException(messages.getFloorLevelNotFound() + level);
 			}
 			return next.get();
 		}
@@ -101,7 +103,7 @@ public abstract class Elevator {
 				.filter(f -> f.getLevel() == level)
 				.findFirst();
 		if (!floor.isPresent()) {
-			throw new ElevatorUsageException("Could not find floor with level " + level);
+			throw new ElevatorUsageException(messages.getFloorLevelNotFound() + level);
 		}
 		return floor.get();
 	}
