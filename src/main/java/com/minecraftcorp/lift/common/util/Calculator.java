@@ -11,9 +11,8 @@ public class Calculator {
 	}
 
 	public boolean isScrollForwards(int newSlot, int previousSlot) {
-		if (previousSlot < newSlot) {
-			return previousSlot != 0 && newSlot != 8;
-		}
-		return previousSlot != 8 && newSlot != 0;
+		if (previousSlot == 0 && newSlot == 8) return false;
+		if (previousSlot == 8 && newSlot == 0) return true;
+		return previousSlot < newSlot;
 	}
 }
