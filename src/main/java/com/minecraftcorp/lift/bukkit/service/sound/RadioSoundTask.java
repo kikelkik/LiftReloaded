@@ -23,8 +23,8 @@ public class RadioSoundTask extends SoundTask {
 	protected static Song[] songs;
 	private final RadioSongPlayer radio;
 
-	public RadioSoundTask(BukkitElevator elevator) {
-		super(elevator);
+	RadioSoundTask(BukkitElevator elevator) {
+		super(elevator, 10);
 		radio = new RadioSongPlayer(new Playlist(songs));
 		radio.setVolume((byte) volume);
 		radio.setRandom(true);

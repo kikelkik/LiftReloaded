@@ -3,6 +3,7 @@ package com.minecraftcorp.lift.bukkit.service.sound;
 import java.util.Collection;
 import java.util.stream.Stream;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -22,10 +23,17 @@ public abstract class SoundTask extends BukkitRunnable {
 		return config.isMusicEnabled(elevator.getBase()) ? new RadioSoundTask(elevator) : new SimpleSoundTask(elevator);
 	}
 
-	protected SoundTask(BukkitElevator elevator) {
+	protected SoundTask(BukkitElevator elevator, int taskInterval) {
 		this.elevator = elevator;
-		runTaskTimer(plugin, 0, 10);
+		runTaskTimer(plugin, 0, taskInterval);
 		plugin.logDebug("Started " + getClass().getSimpleName());
+	}
+
+	@Override
+	public synchronized void cancel() throws IllegalStateException {
+		super.cancel();
+		filterPlayers(elevator.getFreezers()).forEach(player -> player.playSound(player.getLocation(),
+				Sound.BLOCK_NOTE_BLOCK_BELL, 1, .5F));
 	}
 
 	protected Stream<Player> filterPlayers(Collection<Entity> entities) {

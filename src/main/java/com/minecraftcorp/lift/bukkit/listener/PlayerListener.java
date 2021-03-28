@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -78,6 +79,7 @@ public class PlayerListener implements Listener {
 				return;
 			}
 			selectNextFloor(block, player);
+			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1); // TODO: use config volume as base
 			return;
 		}
 		// Start Elevator
@@ -93,6 +95,7 @@ public class PlayerListener implements Listener {
 		if (!activeScrollSelects.containsKey(uuid)) {
 			return;
 		}
+		// TODO: Player distance > 3 => disable
 		boolean scrollForwards = Calculator.isScrollForwards(event.getNewSlot(), event.getPreviousSlot());
 		setDestToNext(activeScrollSelects.get(uuid), player, scrollForwards);
 	}

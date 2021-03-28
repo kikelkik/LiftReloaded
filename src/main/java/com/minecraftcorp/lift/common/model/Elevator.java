@@ -91,7 +91,7 @@ public abstract class Elevator {
 				.filter(f -> f.getLevel() == level)
 				.findFirst();
 		if (!floor.isPresent()) {
-			throw new ElevatorUsageException("Could not find floor with level " + level);
+			throw new ElevatorUsageException("Could not find floor with level " + level); // TODO: retry with floor-recalculation
 		}
 		return floor.get();
 	}
