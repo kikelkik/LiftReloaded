@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -29,6 +30,7 @@ import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import com.minecraftcorp.lift.bukkit.LiftPlugin;
 import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
+import com.minecraftcorp.lift.bukkit.model.BukkitFloorSign;
 import com.minecraftcorp.lift.bukkit.service.ElevatorExecutor;
 import com.minecraftcorp.lift.bukkit.service.ElevatorFactory;
 import com.minecraftcorp.lift.common.exception.ElevatorException;
@@ -95,9 +97,21 @@ public class PlayerListener implements Listener {
 		if (!activeScrollSelects.containsKey(uuid)) {
 			return;
 		}
-		// TODO: Player distance > 3 => disable
 		boolean scrollForwards = Calculator.isScrollForwards(event.getNewSlot(), event.getPreviousSlot());
-		setDestToNext(activeScrollSelects.get(uuid), player, scrollForwards);
+		FloorSign floorSign = activeScrollSelects.get(uuid);
+		boolean tooFarAway = Optional.of(floorSign)
+				.map(BukkitFloorSign.class::cast)
+				.map(BukkitFloorSign::getSign)
+				.map(BlockState::getLocation)
+				.map(location -> location.distance(player.getLocation()))
+				.filter(distance -> distance > 3)
+				.isPresent();
+		if (tooFarAway) {
+			activeScrollSelects.remove(player.getUniqueId());
+			player.sendMessage(config.getScrollSelectDisabled());
+			return;
+		}
+		setDestToNext(floorSign, player, scrollForwards);
 	}
 
 	/**
