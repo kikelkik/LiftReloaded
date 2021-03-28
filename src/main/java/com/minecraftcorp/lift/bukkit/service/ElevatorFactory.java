@@ -76,22 +76,29 @@ public class ElevatorFactory {
 
 	private static List<Floor> createFloors(Set<Block> baseBlocks) {
 		List<Floor> floors = new ArrayList<>();
+		Optional<Block> firstBase = baseBlocks.stream().findFirst();
+		if (!firstBase.isPresent()) {
+			return Collections.emptyList();
+		}
+		int level = 1;
+		World world = firstBase.get().getWorld();
+		for (int y = firstBase.get().getY() + 1; y < config.getMaxHeight(); y++) {
+			boolean floorFound = false;
+			for (Block baseBlock : baseBlocks) {
+				int x = baseBlock.getX();
+				int z = baseBlock.getZ();
 
-		for (Block baseBlock : baseBlocks) {
-			int x = baseBlock.getX();
-			int z = baseBlock.getZ();
-			int level = 1;
-			World world = baseBlock.getWorld();
-
-			for (int y = baseBlock.getY() + 1; y < config.getMaxHeight(); y++) {
 				Block block = world.getBlockAt(x, y, z);
 				if (!isValidShaftBlock(block)) {
 					break; // continue with next base block
 				}
 				if (config.isValidLiftStructureFromButton(block)) {
 					floors.add(createFloor(block, level));
-					level++;
+					floorFound = true;
 				}
+			}
+			if (floorFound) {
+				level++;
 			}
 		}
 		return floors;
