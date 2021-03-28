@@ -21,6 +21,15 @@ buttonBlocks:
   - "*BUTTON"
 signBlocks:
   - "*WALL_SIGN"
+shaftBlocks:
+  - LADDER
+  - SNOW
+  - TORCH
+  - VINE
+  - WATER
+  - RAIL
+  - "*RAIL"
+  - REDSTONE_WIRE
 redstone: false
 baseBlocks:
   IRON_BLOCK:

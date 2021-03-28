@@ -47,6 +47,7 @@ public class BukkitConfig extends Config {
 	private final Set<Material> buttonMaterials = new HashSet<>();
 	private final Set<Material> signMaterials = new HashSet<>();
 	private final Set<Material> musicBlocks = new HashSet<>();
+	private final Set<Material> shaftBlocks = new HashSet<>();
 
 	private boolean useNoCheatPlus;
 	private boolean serverFlightAllowed;
@@ -76,6 +77,10 @@ public class BukkitConfig extends Config {
 
 	public boolean isMusicEnabled(Block block) {
 		return musicBlocks.contains(block.getType());
+	}
+
+	public boolean isShaftBlock(Block block) {
+		return shaftBlocks.contains(block.getType());
 	}
 
 	public boolean isValidLiftStructureFromButton(Block buttonBlock) {
@@ -135,6 +140,12 @@ public class BukkitConfig extends Config {
 				.filter(mat -> anyMaterialMatch.test(configSignMaterials, mat))
 				.forEach(signMaterials::add);
 		plugin.logDebug("Sign materials added: " + signMaterials);
+
+		List<String> configShaftMaterials = config.getStringList("shaftBlocks");
+		Arrays.stream(Material.values())
+				.filter(mat -> anyMaterialMatch.test(configShaftMaterials, mat))
+				.forEach(shaftBlocks::add);
+		plugin.logDebug("Allowed shaft blocks added: " + shaftBlocks);
 
 		try {
 			validate();

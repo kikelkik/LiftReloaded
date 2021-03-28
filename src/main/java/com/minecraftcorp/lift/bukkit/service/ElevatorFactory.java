@@ -181,15 +181,6 @@ public class ElevatorFactory {
 				|| config.getFloorMaterials().contains(block.getType())
 				|| config.isButton(block)
 				|| config.isSign(block)
-				|| block.getType() == Material.LADDER // TODO: Konfigurierbar machen
-				|| block.getType() == Material.SNOW
-				|| block.getType() == Material.TORCH
-				|| block.getType() == Material.VINE
-				|| block.getType() == Material.WATER
-				|| block.getType() == Material.RAIL
-				|| block.getType() == Material.DETECTOR_RAIL
-				|| block.getType() == Material.ACTIVATOR_RAIL
-				|| block.getType() == Material.POWERED_RAIL
-				|| block.getType() == Material.REDSTONE_WIRE;
+				|| config.isShaftBlock(block);
 	}
 }
