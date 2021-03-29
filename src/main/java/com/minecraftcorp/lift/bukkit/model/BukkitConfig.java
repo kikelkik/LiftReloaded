@@ -77,7 +77,7 @@ public class BukkitConfig extends Config {
 	}
 
 	public boolean isMusicEnabled(Block block) {
-		return musicBlocks.contains(block.getType());
+		return plugin.isNoteBlockAPIEnabled() && musicBlocks.contains(block.getType());
 	}
 
 	public boolean isShaftBlock(Block block) {
@@ -177,6 +177,10 @@ public class BukkitConfig extends Config {
 		if (!emptySets.isEmpty()) {
 			plugin.logWarn(String.join(", ", emptySets) + " is empty in config.yml. " +
 					"No Lift will work");
+		}
+		if (!musicBlocks.isEmpty() && !plugin.isNoteBlockAPIEnabled()) {
+			plugin.logWarn("You have configured base blocks with music but NoteBlockAPI is not installed. " +
+					"Music won't work");
 		}
 	}
 

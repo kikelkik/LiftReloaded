@@ -43,6 +43,8 @@ public abstract class SoundTask extends BukkitRunnable {
 	}
 
 	public static void reload() {
-		RadioSoundTask.reload();
+		if (plugin.isNoteBlockAPIEnabled()) {
+			RadioSoundTask.reload();
+		}
 	}
 }
