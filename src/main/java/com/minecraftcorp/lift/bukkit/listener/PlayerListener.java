@@ -102,14 +102,15 @@ public class PlayerListener implements Listener {
 		}
 		boolean scrollForwards = Calculator.isScrollForwards(event.getNewSlot(), event.getPreviousSlot());
 		FloorSign floorSign = activeScrollSelects.get(uuid);
-		boolean tooFarAway = Optional.of(floorSign)
+		boolean inScrollRange = Optional.of(floorSign)
 				.map(BukkitFloorSign.class::cast)
 				.map(BukkitFloorSign::getSign)
 				.map(BlockState::getLocation)
+				.filter(location -> player.getWorld().equals(location.getWorld()))
 				.map(location -> location.distance(player.getLocation()))
-				.filter(distance -> distance > 3)
+				.filter(distance -> distance <= 3)
 				.isPresent();
-		if (tooFarAway) {
+		if (!inScrollRange) {
 			activeScrollSelects.remove(player.getUniqueId());
 			player.sendMessage(messages.getScrollSelectDisabled());
 			return;
