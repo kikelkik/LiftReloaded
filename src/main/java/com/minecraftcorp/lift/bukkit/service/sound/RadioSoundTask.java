@@ -20,11 +20,14 @@ import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
 public class RadioSoundTask extends SoundTask {
 
 	private static final Fade RADIO_FADE = new Fade(FadeType.LINEAR, 20);
-	protected static Song[] songs;
+	private static Song[] songs;
 	private final RadioSongPlayer radio;
 
 	RadioSoundTask(BukkitElevator elevator) {
 		super(elevator, 10);
+		if (songs == null) {
+			reload();
+		}
 		radio = new RadioSongPlayer(new Playlist(songs));
 		radio.setVolume((byte) volume);
 		radio.setRandom(true);
@@ -33,6 +36,7 @@ public class RadioSoundTask extends SoundTask {
 
 	@Override
 	public void run() {
+		super.run();
 		List<UUID> uuidsInElevator = Stream.concat(elevator.getPassengers().stream(), elevator.getFreezers().stream())
 				.map(Entity::getUniqueId)
 				.collect(Collectors.toList());
@@ -44,9 +48,9 @@ public class RadioSoundTask extends SoundTask {
 
 	@Override
 	public void cancel() throws IllegalStateException {
+		super.cancel();
 		plugin.logDebug("Cancelled SoundTask");
 		stopRadio(elevator.getPassengers());
-		super.cancel();
 	}
 
 	private void startRadio(Set<Entity> entities) {

@@ -59,7 +59,7 @@ public class LiftPlugin extends JavaPlugin {
 	}
 
 	public void reload() {
-		BukkitConfig.INSTANCE.loadConfig(this);
+		config.loadConfig(this);
 		SoundTask.reload();
 		logInfo("Lift successfully reloaded");
 	}

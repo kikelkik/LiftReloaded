@@ -41,7 +41,7 @@ import lombok.NoArgsConstructor;
 public class BukkitConfig extends Config {
 
 	public static final BukkitConfig INSTANCE = new BukkitConfig();
-	private static final LiftPlugin plugin = LiftPlugin.INSTANCE;
+	private LiftPlugin plugin;
 
 	private final Map<Material, Double> blockSpeeds = new HashMap<>();
 	private final Set<Material> floorMaterials = new HashSet<>();
@@ -91,6 +91,7 @@ public class BukkitConfig extends Config {
 	}
 
 	public void loadConfig(LiftPlugin plugin) {
+		this.plugin = plugin;
 		File configFile = new File(plugin.getDataFolder(), File.separator + "config.yml");
 		File defaultConfigFile = new File(plugin.getDataFolder(),
 				File.separator + "default" + File.separator + "config.yml");

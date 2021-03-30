@@ -30,6 +30,13 @@ public abstract class SoundTask extends BukkitRunnable {
 	}
 
 	@Override
+	public void run() {
+		if (System.currentTimeMillis() > elevator.getMaxEndTime()) {
+			cancel();
+		}
+	}
+
+	@Override
 	public synchronized void cancel() throws IllegalStateException {
 		super.cancel();
 		filterPlayers(elevator.getFreezers()).forEach(player -> player.playSound(player.getLocation(),
