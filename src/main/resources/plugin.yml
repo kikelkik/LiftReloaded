@@ -1,9 +1,6 @@
 author: croxis, kikelkik
-database: false
-generator: http://dinnerbone.com/minecraft/tools/pluginator/
 main: com.minecraftcorp.lift.bukkit.LiftPlugin
-name: Lift
-startup: postworld
+name: LiftReloaded
 version: ${project.version}
 description: Simple and easy Lifts and Elevators for Bukkit
 softdepend: [NoCheatPlus, NoteBlockAPI]
@@ -16,7 +13,7 @@ permissions:
     default: true
   lift.reload:
     description: Reloads the lift plugin
-    default: false
+    default: op
 commands:
    lift:
       description: Scans a lift.
