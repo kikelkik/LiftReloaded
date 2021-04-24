@@ -1,23 +1,5 @@
 package com.minecraftcorp.lift.bukkit.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-
 import com.minecraftcorp.lift.bukkit.LiftPlugin;
 import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
@@ -28,8 +10,17 @@ import com.minecraftcorp.lift.common.model.Elevator;
 import com.minecraftcorp.lift.common.model.Floor;
 import com.minecraftcorp.lift.common.model.FloorSign;
 import com.minecraftcorp.lift.common.model.Messages;
-
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 
 @UtilityClass
 public class ElevatorFactory {
@@ -57,7 +48,7 @@ public class ElevatorFactory {
 		floors.stream()
 				.flatMap(floor -> floor.getSigns().stream())
 				.forEach(sign -> sign.setElevator(elevator));
-		writeEmptyFloorSigns(elevator);
+		writeInvalidFloorSigns(elevator);
 		return Optional.of(elevator);
 	}
 
@@ -73,13 +64,14 @@ public class ElevatorFactory {
 				.orElseThrow(() -> new ElevatorCreateException("Could not extract initial floor sign from start floor"));
 	}
 
-	public static void writeEmptyFloorSigns(Elevator elevator) {
+	public static void writeInvalidFloorSigns(Elevator elevator) {
 		List<Floor> floors = elevator.getFloors();
 		for (int level = 0; level < floors.size(); level++) {
 			Floor current = floors.get(level);
-			boolean anyEmpty = current.getSigns().stream()
-					.anyMatch(FloorSign::isEmpty);
-			if (anyEmpty) {
+			boolean anyInvalid = !current.getSigns()
+					.stream()
+					.allMatch(FloorSign::isValid);
+			if (anyInvalid) {
 				current.updateSigns(floors.get(level == floors.size() - 1 ? 0 : level + 1));
 			}
 		}

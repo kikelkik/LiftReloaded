@@ -1,7 +1,6 @@
 package com.minecraftcorp.lift.common.model;
 
 import com.minecraftcorp.lift.common.exception.ElevatorChangeException;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +18,7 @@ public abstract class FloorSign {
 
 	public abstract void updateSign(Floor current, Floor dest);
 
-	public abstract boolean isEmpty();
+	public abstract boolean isValid();
 
 	public abstract int readDestLevel();
 
