@@ -1,16 +1,16 @@
 package com.minecraftcorp.lift.bukkit.command;
 
-import java.util.Objects;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.minecraftcorp.lift.bukkit.LiftPlugin;
 import com.minecraftcorp.lift.common.model.Permission;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
 
-public class LiftCommand implements CommandExecutor {
+public class LiftCommand implements TabExecutor {
 
 	private final LiftPlugin plugin = LiftPlugin.INSTANCE;
 
@@ -44,5 +44,13 @@ public class LiftCommand implements CommandExecutor {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		if ("reload".startsWith(args[0]) && args.length == 1) {
+			return Collections.singletonList("reload");
+		}
+		return Collections.emptyList();
 	}
 }
