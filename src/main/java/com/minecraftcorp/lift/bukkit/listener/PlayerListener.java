@@ -1,12 +1,17 @@
 package com.minecraftcorp.lift.bukkit.listener;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import com.minecraftcorp.lift.bukkit.LiftPlugin;
+import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
+import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
+import com.minecraftcorp.lift.bukkit.model.BukkitFloorSign;
+import com.minecraftcorp.lift.bukkit.service.ElevatorExecutor;
+import com.minecraftcorp.lift.bukkit.service.ElevatorFactory;
+import com.minecraftcorp.lift.common.exception.ElevatorException;
+import com.minecraftcorp.lift.common.exception.ElevatorUsageException;
+import com.minecraftcorp.lift.common.model.*;
+import com.minecraftcorp.lift.common.util.Calculator;
+import java.util.*;
 import java.util.stream.Stream;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,28 +25,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.util.Vector;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
-
-import com.minecraftcorp.lift.bukkit.LiftPlugin;
-import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
-import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
-import com.minecraftcorp.lift.bukkit.model.BukkitFloorSign;
-import com.minecraftcorp.lift.bukkit.service.ElevatorExecutor;
-import com.minecraftcorp.lift.bukkit.service.ElevatorFactory;
-import com.minecraftcorp.lift.common.exception.ElevatorException;
-import com.minecraftcorp.lift.common.exception.ElevatorUsageException;
-import com.minecraftcorp.lift.common.model.Elevator;
-import com.minecraftcorp.lift.common.model.Floor;
-import com.minecraftcorp.lift.common.model.FloorSign;
-import com.minecraftcorp.lift.common.model.Messages;
-import com.minecraftcorp.lift.common.model.Permission;
-import com.minecraftcorp.lift.common.util.Calculator;
 
 public class PlayerListener implements Listener {
 
@@ -258,7 +244,7 @@ public class PlayerListener implements Listener {
 				return;
 			}
 			elevator.setDestFloor(nextFloor.get());
-			currentFloor.updateSigns(nextFloor.get());
+			floorSign.updateSign(currentFloor, nextFloor.get());
 		} catch (ElevatorUsageException e) {
 			catchElevatorUsageException(player, e);
 		} catch (ElevatorException e) {
