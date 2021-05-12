@@ -16,6 +16,5 @@ public class Messages {
 	private String scrollSelectEnabled;
 	private String scrollSelectDisabled;
 	private String floorNotExists;
-	private String noBaseBlock;
 	private String timeout;
 }

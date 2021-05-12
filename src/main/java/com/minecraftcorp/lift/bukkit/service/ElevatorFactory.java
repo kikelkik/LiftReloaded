@@ -36,7 +36,8 @@ public class ElevatorFactory {
 
 		Set<Block> baseBlocks = findBaseBlocksBelow(buttonBlock);
 		if (baseBlocks.isEmpty()) {
-			throw new ElevatorUsageException(messages.getNoBaseBlock());
+			plugin.logDebug("Found no base block. Assuming this is not supposed to be an elevator.");
+			return Optional.empty();
 		}
 		List<Floor> floors = createFloors(baseBlocks);
 		if (floors.size() <= 1) {

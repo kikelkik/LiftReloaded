@@ -44,7 +44,6 @@ messages:
   oneFloor: "&7There is only one floor."
   unsafe: "&cIt is unsafe to leave a vehicle in a lift!"
   floorNotExists: "&cFloor does not exist. Check shaft for blockage"
-  noBaseBlock: "&cThere is no base block for this lift"
   scrollSelectEnabled: "&7Scrollable floor selection enabled. Click on sign with an item for default mode"
   scrollSelectDisabled: "&7Scrollable floor selection disabled"
   timeout: "&7You have been teleported to destination due to timeout"
