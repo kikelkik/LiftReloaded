@@ -1,14 +1,13 @@
 package com.minecraftcorp.lift.bukkit.model;
 
-import static com.minecraftcorp.lift.common.util.Calculator.*;
+import static com.minecraftcorp.lift.common.util.Calculator.compareBlockCoords;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
+import com.minecraftcorp.lift.common.exception.ElevatorException;
+import com.minecraftcorp.lift.common.exception.ElevatorRunException;
+import com.minecraftcorp.lift.common.model.Elevator;
+import com.minecraftcorp.lift.common.model.Floor;
+import java.util.*;
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -16,13 +15,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
-
-import com.minecraftcorp.lift.common.exception.ElevatorException;
-import com.minecraftcorp.lift.common.exception.ElevatorRunException;
-import com.minecraftcorp.lift.common.model.Elevator;
-import com.minecraftcorp.lift.common.model.Floor;
-
-import lombok.Getter;
 
 @Getter
 public class BukkitElevator extends Elevator {
@@ -60,7 +52,7 @@ public class BukkitElevator extends Elevator {
 	}
 
 	public void removeFreezers(List<Entity> freezers) {
-		this.freezers.removeAll(freezers);
+		freezers.forEach(this.freezers::remove);
 	}
 
 	public void saveBlock(BlockState blockState) {
@@ -86,7 +78,7 @@ public class BukkitElevator extends Elevator {
 		Optional<Location> maxBlock = baseBlocks.stream()
 				.max((b1, b2) -> compareBlockCoords(b1.getX(), b1.getZ(), b2.getX(), b2.getZ()))
 				.map(Block::getLocation);
-		if (!minBlock.isPresent() || !maxBlock.isPresent()) {
+		if (minBlock.isEmpty() || maxBlock.isEmpty()) {
 			throw new ElevatorRunException("Could not find corner base blocks");
 		}
 		Location bottomCorner = minBlock.get();
@@ -110,7 +102,7 @@ public class BukkitElevator extends Elevator {
 	public Block getBase() {
 		Optional<Block> block = baseBlocks.stream()
 				.findFirst();
-		if (!block.isPresent()) {
+		if (block.isEmpty()) {
 			throw new ElevatorException("Could not get current world: base blocks are empty");
 		}
 		return block.get();

@@ -82,7 +82,7 @@ public class ElevatorFactory {
 		Optional<Floor> startFloor = floors.stream()
 				.filter(floor -> floor.getButtonY() == buttonBlock.getY())
 				.findFirst();
-		if (!startFloor.isPresent()) {
+		if (startFloor.isEmpty()) {
 			throw new ElevatorCreateException("Could not extract start floor from elevator's floors");
 		}
 		return startFloor.get();
@@ -91,7 +91,7 @@ public class ElevatorFactory {
 	private static List<Floor> createFloors(Set<Block> baseBlocks) {
 		List<Floor> floors = new ArrayList<>();
 		Optional<Block> firstBase = baseBlocks.stream().findFirst();
-		if (!firstBase.isPresent()) {
+		if (firstBase.isEmpty()) {
 			return Collections.emptyList();
 		}
 		int level = 1;

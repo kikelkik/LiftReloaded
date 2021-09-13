@@ -1,14 +1,12 @@
 package com.minecraftcorp.lift.common.model;
 
+import com.minecraftcorp.lift.common.exception.ElevatorChangeException;
+import com.minecraftcorp.lift.common.exception.ElevatorException;
+import com.minecraftcorp.lift.common.exception.ElevatorUsageException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import com.minecraftcorp.lift.common.exception.ElevatorChangeException;
-import com.minecraftcorp.lift.common.exception.ElevatorException;
-import com.minecraftcorp.lift.common.exception.ElevatorUsageException;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -84,7 +82,7 @@ public abstract class Elevator {
 		Optional<Floor> floor = floors.stream()
 				.filter(f -> f.getSigns().contains(floorSign))
 				.findFirst();
-		if (!floor.isPresent()) {
+		if (floor.isEmpty()) {
 			throw new ElevatorChangeException("Could not find floor that belongs to clicked floor sign");
 		}
 		return floor.get();
@@ -94,7 +92,7 @@ public abstract class Elevator {
 		if (level > floors.size()) {
 			// Fallback to next floor if level doesn't exist
 			Optional<Floor> next = getNextFloor(startFloor, startFloor);
-			if (!next.isPresent()) {
+			if (next.isEmpty()) {
 				throw new ElevatorException(messages.getFloorNotExists() + level);
 			}
 			return next.get();
@@ -102,7 +100,7 @@ public abstract class Elevator {
 		Optional<Floor> floor = floors.stream()
 				.filter(f -> f.getLevel() == level)
 				.findFirst();
-		if (!floor.isPresent()) {
+		if (floor.isEmpty()) {
 			throw new ElevatorUsageException(messages.getFloorNotExists() + level);
 		}
 		return floor.get();

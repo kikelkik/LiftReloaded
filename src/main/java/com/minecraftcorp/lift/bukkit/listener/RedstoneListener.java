@@ -1,14 +1,5 @@
 package com.minecraftcorp.lift.bukkit.listener;
 
-import java.util.Optional;
-
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockRedstoneEvent;
-
 import com.minecraftcorp.lift.bukkit.LiftPlugin;
 import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
@@ -16,6 +7,13 @@ import com.minecraftcorp.lift.bukkit.service.ElevatorExecutor;
 import com.minecraftcorp.lift.bukkit.service.ElevatorFactory;
 import com.minecraftcorp.lift.common.exception.ElevatorCreateException;
 import com.minecraftcorp.lift.common.exception.ElevatorException;
+import java.util.Optional;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockRedstoneEvent;
 
 public class RedstoneListener implements Listener {
 
@@ -37,7 +35,7 @@ public class RedstoneListener implements Listener {
 		}
 
 		Optional<Block> buttonOpt = findButton(block);
-		if (!buttonOpt.isPresent()) {
+		if (buttonOpt.isEmpty()) {
 			return;
 		}
 		createAndRunElevator(buttonOpt.get());
@@ -46,7 +44,7 @@ public class RedstoneListener implements Listener {
 	private void createAndRunElevator(Block button) {
 		try {
 			Optional<BukkitElevator> elevator = ElevatorFactory.createElevator(button);
-			if (!elevator.isPresent()) {
+			if (elevator.isEmpty()) {
 				return;
 			}
 			ElevatorExecutor.runElevator(elevator.get());

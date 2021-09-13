@@ -119,7 +119,7 @@ public class PlayerListener implements Listener {
 				.stream()
 				.filter(elevator -> elevator.getPassengers().contains(player) || elevator.getFreezers().contains(player))
 				.findFirst();
-		if (!elevatorOpt.isPresent()) {
+		if (elevatorOpt.isEmpty()) {
 			plugin.logWarn(player.getName() + " is in any lift but the elevator could not be found");
 			return;
 		}
@@ -185,12 +185,12 @@ public class PlayerListener implements Listener {
 	private void selectNextFloor(Block signBlock, Player player) {
 		Block button = signBlock.getRelative(BlockFace.DOWN);
 		Optional<BukkitElevator> elevatorOpt = createElevator(button, player);
-		if (!elevatorOpt.isPresent()) {
+		if (elevatorOpt.isEmpty()) {
 			return;
 		}
 		BukkitElevator elevator = elevatorOpt.get();
 		Optional<Floor> currentFloorOpt = elevator.getFloorFromY(button.getY());
-		if (!currentFloorOpt.isPresent()) {
+		if (currentFloorOpt.isEmpty()) {
 			player.sendMessage(messages.getFloorNotExists());
 			return;
 		}
@@ -209,7 +209,7 @@ public class PlayerListener implements Listener {
 
 	private void createAndRunElevator(Block buttonBlock, Player player) {
 		Optional<BukkitElevator> elevator = createElevator(buttonBlock, player);
-		if (!elevator.isPresent()) {
+		if (elevator.isEmpty()) {
 			return;
 		}
 		try {
@@ -239,7 +239,7 @@ public class PlayerListener implements Listener {
 		try {
 			Floor destFloor = elevator.getFloorByLevel(destLevel);
 			Optional<Floor> nextFloor = isNextAbove ? elevator.getNextFloor(destFloor, currentFloor) : elevator.getPreviousFloor(destFloor, currentFloor);
-			if (!nextFloor.isPresent()) {
+			if (nextFloor.isEmpty()) {
 				player.sendMessage(messages.getOneFloor());
 				return;
 			}

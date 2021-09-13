@@ -1,22 +1,5 @@
 package com.minecraftcorp.lift.bukkit;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.minecraftcorp.lift.bukkit.command.LiftCommand;
 import com.minecraftcorp.lift.bukkit.listener.PlayerListener;
 import com.minecraftcorp.lift.bukkit.listener.RedstoneListener;
@@ -25,8 +8,16 @@ import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
 import com.minecraftcorp.lift.bukkit.service.sound.SoundTask;
 import com.minecraftcorp.lift.common.exception.ElevatorException;
-
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
 public class LiftPlugin extends JavaPlugin {
@@ -42,14 +33,15 @@ public class LiftPlugin extends JavaPlugin {
 		new LiftCommand();
 		new PlayerListener();
 		new VehicleListener();
-		reload();
-		if (config.getRedstone()) {
-			new RedstoneListener();
-		}
 
 		noteBlockAPIEnabled = Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI");
 		if (!noteBlockAPIEnabled) {
-			logWarn("*** NoteBlockAPI is not installed or not enabled. ***");
+			logInfo("*** NoteBlockAPI is not installed or not enabled. ***");
+		}
+
+		reload();
+		if (config.getRedstone()) {
+			new RedstoneListener();
 		}
 	}
 
