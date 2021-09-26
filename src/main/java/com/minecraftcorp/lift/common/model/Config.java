@@ -23,6 +23,7 @@ public abstract class Config {
 	protected Boolean redstone;
 	protected Integer maxLiftArea;
 	protected Integer maxHeight;
+	protected Integer minHeight;
 	protected Boolean autoPlace;
 	protected Boolean serverFlight;
 	protected Boolean liftMobs;

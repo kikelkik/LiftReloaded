@@ -5,6 +5,7 @@
 # soundVolume (0-100) defines the relative volume for all sounds.
 maxLiftArea: 16
 maxHeight: 256
+minHeight: 0
 debug: false
 autoPlace: false
 preventEntry: false

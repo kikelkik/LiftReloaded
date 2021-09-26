@@ -143,7 +143,7 @@ public class ElevatorFactory {
 		World world = startBlock.getWorld();
 		int x = startBlock.getX();
 		int z = startBlock.getZ();
-		for (int y = startBlock.getY(); y >= 0; y--) {
+		for (int y = startBlock.getY(); y >= config.getMinHeight(); y--) {
 			Block block = world.getBlockAt(x, y, z);
 			if (isValidShaftBlock(block)) {
 				continue;
