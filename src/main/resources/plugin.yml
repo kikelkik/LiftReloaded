@@ -2,7 +2,7 @@ author: croxis, kikelkik
 main: com.minecraftcorp.lift.bukkit.LiftPlugin
 name: LiftReloaded
 version: ${project.version}
-description: Simple and easy Lifts and Elevators for Bukkit
+description: Simple and realistic elevators
 softdepend: [NoCheatPlus, NoteBlockAPI]
 permissions:
   lift:
