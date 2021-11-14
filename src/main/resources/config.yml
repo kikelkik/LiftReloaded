@@ -38,8 +38,8 @@ baseBlocks:
 soundEnabled: true
 soundVolume: 100
 messages:
-  destination: "&1Dest"
-  currentFloor: "Current Floor"
+  destination: "&7Destination"
+  currentFloor: "&7Current Floor"
   cantEnter: "&7Can't enter elevator in use"
   cantLeave: "&7Can't leave elevator in use"
   oneFloor: "&7There is only one floor."
