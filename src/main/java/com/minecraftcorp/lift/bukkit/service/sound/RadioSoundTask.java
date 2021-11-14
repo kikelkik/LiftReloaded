@@ -9,6 +9,7 @@ import com.xxmicloxx.NoteBlockAPI.songplayer.Fade;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -79,8 +80,12 @@ public class RadioSoundTask extends SoundTask {
 		Path songDir = plugin.getDataFolder().toPath()
 				.resolve("music");
 		if (!Files.isDirectory(songDir)) {
-			plugin.logWarn(songDir + " could not be found. Will be unable to play music.");
-			return Collections.emptyList();
+			try {
+				Files.createDirectories(songDir);
+			} catch (IOException e) {
+				throw new ConfigurationException("Unable to create music directory");
+			}
+			plugin.logInfo("Created " + songDir + ". You can drop your .nbs files there.");
 		}
 		try {
 			return Arrays.stream(Objects.requireNonNull(songDir.toFile()
