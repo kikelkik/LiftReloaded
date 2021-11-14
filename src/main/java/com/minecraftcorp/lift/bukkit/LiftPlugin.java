@@ -7,13 +7,10 @@ import com.minecraftcorp.lift.bukkit.listener.VehicleListener;
 import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
 import com.minecraftcorp.lift.bukkit.service.sound.SoundTask;
-import com.minecraftcorp.lift.common.exception.ElevatorException;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -86,21 +83,5 @@ public class LiftPlugin extends JavaPlugin {
 		return activeLifts.stream()
 				.flatMap(lift -> Stream.concat(lift.getPassengers().stream(), lift.getFreezers().stream()))
 				.noneMatch(entity -> entityUuid.equals(entity.getUniqueId()));
-	}
-
-	public List<File> getMusicFiles() {
-		Path songDir = getDataFolder().toPath()
-				.resolve("music");
-		if (!Files.isDirectory(songDir)) {
-			logWarn(songDir + " could not be found. Will be unable to play music.");
-			return Collections.emptyList();
-		}
-		try {
-			return Arrays.stream(Objects.requireNonNull(songDir.toFile()
-					.listFiles((file, name) -> name.endsWith(".nbs"))))
-					.collect(Collectors.toList());
-		} catch (Exception e) {
-			throw new ElevatorException("Unable to find music files in " + songDir, e);
-		}
 	}
 }

@@ -1,16 +1,14 @@
 package com.minecraftcorp.lift.bukkit.service.sound;
 
+import com.minecraftcorp.lift.bukkit.LiftPlugin;
+import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
+import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
 import java.util.Collection;
 import java.util.stream.Stream;
-
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import com.minecraftcorp.lift.bukkit.LiftPlugin;
-import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
-import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
 
 public abstract class SoundTask extends BukkitRunnable {
 

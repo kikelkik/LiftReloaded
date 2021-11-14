@@ -1,21 +1,21 @@
 package com.minecraftcorp.lift.bukkit.service.sound;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.bukkit.entity.Entity;
-
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
+import com.minecraftcorp.lift.common.exception.ConfigurationException;
 import com.xxmicloxx.NoteBlockAPI.model.FadeType;
 import com.xxmicloxx.NoteBlockAPI.model.Playlist;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.Fade;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.bukkit.entity.Entity;
 
 public class RadioSoundTask extends SoundTask {
 
@@ -69,9 +69,25 @@ public class RadioSoundTask extends SoundTask {
 	}
 
 	public static void reload() {
-		songs = plugin.getMusicFiles()
+		songs = getMusicFiles()
 				.stream()
 				.map(NBSDecoder::parse)
 				.toArray(Song[]::new);
+	}
+
+	private static List<File> getMusicFiles() {
+		Path songDir = plugin.getDataFolder().toPath()
+				.resolve("music");
+		if (!Files.isDirectory(songDir)) {
+			plugin.logWarn(songDir + " could not be found. Will be unable to play music.");
+			return Collections.emptyList();
+		}
+		try {
+			return Arrays.stream(Objects.requireNonNull(songDir.toFile()
+					.listFiles((file, name) -> name.endsWith(".nbs"))))
+					.collect(Collectors.toList());
+		} catch (Exception e) {
+			throw new ConfigurationException("Unable to find music files in " + songDir, e);
+		}
 	}
 }
