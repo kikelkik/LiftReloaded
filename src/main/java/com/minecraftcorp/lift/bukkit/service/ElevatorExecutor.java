@@ -130,6 +130,6 @@ public class ElevatorExecutor {
 		if (entity.isInsideVehicle()) {
 			y -= Objects.requireNonNull(entity.getVehicle()).getHeight();
 		}
-		return y >= floor.getFloorY() - 1 && y <= floor.getFloorY() + 1;
+		return y >= floor.getFloorY() && y <= floor.getFloorY() + 2;
 	}
 }
