@@ -1,7 +1,6 @@
 package com.minecraftcorp.lift.common.model;
 
 import java.util.List;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

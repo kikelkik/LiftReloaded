@@ -1,22 +1,20 @@
 package com.minecraftcorp.lift.bukkit.service;
 
+import com.minecraftcorp.lift.bukkit.LiftPlugin;
+import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
+import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
+import com.minecraftcorp.lift.bukkit.service.sound.SoundTask;
+import com.minecraftcorp.lift.common.model.Messages;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-
-import com.minecraftcorp.lift.bukkit.LiftPlugin;
-import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
-import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
-import com.minecraftcorp.lift.bukkit.service.sound.SoundTask;
-import com.minecraftcorp.lift.common.model.Messages;
 
 public class ElevatorTask extends BukkitRunnable {
 

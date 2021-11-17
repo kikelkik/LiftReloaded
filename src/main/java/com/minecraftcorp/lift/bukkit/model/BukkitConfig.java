@@ -1,35 +1,25 @@
 package com.minecraftcorp.lift.bukkit.model;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
-
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import com.minecraftcorp.lift.bukkit.LiftPlugin;
 import com.minecraftcorp.lift.common.exception.ConfigurationException;
 import com.minecraftcorp.lift.common.exception.ElevatorException;
 import com.minecraftcorp.lift.common.model.Config;
 import com.minecraftcorp.lift.common.model.Messages;
 import com.minecraftcorp.lift.common.util.ConfigReader;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * Note that fields that are configurable in config.yml should have the same name, so

@@ -1,15 +1,13 @@
 package com.minecraftcorp.lift.common.model;
 
+import com.minecraftcorp.lift.bukkit.LiftPlugin;
+import com.minecraftcorp.lift.common.exception.ConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-
-import com.minecraftcorp.lift.bukkit.LiftPlugin;
-import com.minecraftcorp.lift.common.exception.ConfigurationException;
-
 import lombok.Getter;
 
 /**

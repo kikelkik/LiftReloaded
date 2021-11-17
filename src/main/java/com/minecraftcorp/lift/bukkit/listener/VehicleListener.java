@@ -1,5 +1,7 @@
 package com.minecraftcorp.lift.bukkit.listener;
 
+import com.minecraftcorp.lift.bukkit.LiftPlugin;
+import com.minecraftcorp.lift.common.model.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -7,9 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleExitEvent;
-
-import com.minecraftcorp.lift.bukkit.LiftPlugin;
-import com.minecraftcorp.lift.common.model.Messages;
 
 public class VehicleListener implements Listener {
 

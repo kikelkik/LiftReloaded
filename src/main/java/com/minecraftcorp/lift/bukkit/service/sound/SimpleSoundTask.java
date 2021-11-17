@@ -1,8 +1,7 @@
 package com.minecraftcorp.lift.bukkit.service.sound;
 
-import org.bukkit.Sound;
-
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
+import org.bukkit.Sound;
 
 public class SimpleSoundTask extends SoundTask {
 

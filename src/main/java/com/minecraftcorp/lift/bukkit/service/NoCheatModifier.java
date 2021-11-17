@@ -1,17 +1,14 @@
 package com.minecraftcorp.lift.bukkit.service;
 
+import com.minecraftcorp.lift.bukkit.LiftPlugin;
+import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
+import fr.neatmonster.nocheatplus.checks.CheckType;
+import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
 import java.util.List;
-
+import lombok.experimental.UtilityClass;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
-
-import com.minecraftcorp.lift.bukkit.LiftPlugin;
-import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
-
-import fr.neatmonster.nocheatplus.checks.CheckType;
-import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class NoCheatModifier {

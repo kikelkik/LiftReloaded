@@ -1,10 +1,14 @@
 package com.minecraftcorp.lift.bukkit.service;
 
+import com.minecraftcorp.lift.bukkit.LiftPlugin;
+import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
+import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
+import com.minecraftcorp.lift.common.model.Floor;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+import lombok.experimental.UtilityClass;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,13 +19,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
-
-import com.minecraftcorp.lift.bukkit.LiftPlugin;
-import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
-import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
-import com.minecraftcorp.lift.common.model.Floor;
-
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ElevatorExecutor {

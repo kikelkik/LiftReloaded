@@ -1,14 +1,12 @@
 package com.minecraftcorp.lift.common.util;
 
+import com.minecraftcorp.lift.common.exception.ConfigurationException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-
-import com.minecraftcorp.lift.common.exception.ConfigurationException;
-
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
