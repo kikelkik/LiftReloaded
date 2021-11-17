@@ -87,12 +87,12 @@ public class ElevatorExecutor {
 				if (!config.isFloorBlock(block)) {
 					continue;
 				}
-				removeAndSaveBlock(elevator, block);
 				Block blockAbove = block.getRelative(BlockFace.UP);
 				if (!blockAbove.isEmpty() && !config.isSign(blockAbove)) {
 					// shaft block like carpet, rail, redstone, ...
 					removeAndSaveBlock(elevator, blockAbove);
 				}
+				removeAndSaveBlock(elevator, block);
 			}
 		}
 	}
