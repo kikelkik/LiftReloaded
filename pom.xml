@@ -64,8 +64,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <release>${java.version}</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -87,7 +86,7 @@
         <repository>
             <!-- for nocheatplus -->
             <id>md5-repo</id>
-            <url>http://repo.md-5.net/content/repositories/releases/</url>
+            <url>https://repo.md-5.net/repository/releases/</url>
         </repository>
         <repository>
             <!-- for note blocks -->
