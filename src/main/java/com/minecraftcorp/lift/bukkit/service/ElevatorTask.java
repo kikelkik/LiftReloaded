@@ -5,11 +5,13 @@ import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
 import com.minecraftcorp.lift.bukkit.service.sound.SoundTask;
 import com.minecraftcorp.lift.common.model.Messages;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bukkit.Location;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -133,6 +135,8 @@ public class ElevatorTask extends BukkitRunnable {
 
 	private void restoreFloorBlocks() {
 		elevator.getBlockCache()
+				.stream()
+				.sorted(Comparator.comparingInt(BlockState::getY))
 				.forEach(blockState -> blockState.update(true));
 	}
 }
