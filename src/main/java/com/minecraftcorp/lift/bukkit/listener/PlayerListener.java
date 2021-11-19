@@ -105,33 +105,14 @@ public class PlayerListener implements Listener {
 		setDestToNext(floorSign, player, scrollForwards);
 	}
 
-	/**
-	 * If a player quits within an elevator, we have to save a location to teleport the player on next login, so he
-	 * won't fall down the shaft.
-	 */
 	@EventHandler(ignoreCancelled = true)
 	public void onLogout(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		if (plugin.isInNoLift(player.getUniqueId())) {
-			return;
-		}
-		Optional<BukkitElevator> elevatorOpt = plugin.getActiveLifts()
-				.stream()
-				.filter(elevator -> elevator.getPassengers().contains(player) || elevator.getFreezers().contains(player))
-				.findFirst();
-		if (elevatorOpt.isEmpty()) {
-			plugin.logWarn(player.getName() + " is in any lift but the elevator could not be found");
-			return;
-		}
-		BukkitElevator elevator = elevatorOpt.get();
+		handlePlayerQuit(event);
+	}
 
-		Location baseFloor = elevator.getCenter(elevator.getFloorByLevel(1));
-		quitInElevator.put(player.getUniqueId(), baseFloor);
-		getVehicleOfPlayer(player).ifPresent(vehicle -> quitInElevator.put(vehicle.getUniqueId(), baseFloor));
-		plugin.logDebug("Remember that " + player.getName() + " quit within an elevator.");
-
-		elevator.removePassengers(Collections.singletonList(player));
-		elevator.removeFreezers(Collections.singletonList(player));
+	@EventHandler(ignoreCancelled = true)
+	public void onKick(PlayerKickEvent event) {
+		handlePlayerQuit(event);
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -180,6 +161,34 @@ public class PlayerListener implements Listener {
 				.normalize()
 				.multiply(.3);
 		player.setVelocity(pushBack);
+	}
+
+	/**
+	 * If a player quits within an elevator, we have to save a location to teleport the player on next login, so he
+	 * won't fall down the shaft.
+	 */
+	private void handlePlayerQuit(PlayerEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.isInNoLift(player.getUniqueId())) {
+			return;
+		}
+		Optional<BukkitElevator> elevatorOpt = plugin.getActiveLifts()
+				.stream()
+				.filter(elevator -> elevator.getPassengers().contains(player) || elevator.getFreezers().contains(player))
+				.findFirst();
+		if (elevatorOpt.isEmpty()) {
+			plugin.logWarn(player.getName() + " is in any lift but the elevator could not be found");
+			return;
+		}
+		BukkitElevator elevator = elevatorOpt.get();
+
+		Location baseFloor = elevator.getCenter(elevator.getFloorByLevel(1));
+		quitInElevator.put(player.getUniqueId(), baseFloor);
+		getVehicleOfPlayer(player).ifPresent(vehicle -> quitInElevator.put(vehicle.getUniqueId(), baseFloor));
+		plugin.logDebug("Remember that " + player.getName() + " quit within an elevator.");
+
+		elevator.removePassengers(Collections.singletonList(player));
+		elevator.removeFreezers(Collections.singletonList(player));
 	}
 
 	private void selectNextFloor(Block signBlock, Player player) {
