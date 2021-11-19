@@ -83,7 +83,7 @@ public class ElevatorFactory {
 				.filter(floor -> floor.getButtonY() == buttonBlock.getY())
 				.findFirst();
 		if (startFloor.isEmpty()) {
-			throw new ElevatorCreateException("Could not extract start floor from elevator's floors");
+			throw new ElevatorUsageException("This floor does not belong to the elevator. Check for shaft blockage.");
 		}
 		return startFloor.get();
 	}
