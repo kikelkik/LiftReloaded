@@ -4,6 +4,7 @@ import com.minecraftcorp.lift.bukkit.LiftPlugin;
 import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
 import com.minecraftcorp.lift.common.model.Floor;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -15,6 +16,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.BoundingBox;
@@ -25,6 +27,8 @@ public class ElevatorExecutor {
 
 	private static final BukkitConfig config = BukkitConfig.INSTANCE;
 	private static final LiftPlugin plugin = LiftPlugin.INSTANCE;
+	private static final List<Material> RAIL_MATERIALS = Arrays.asList(Material.RAIL, Material.DETECTOR_RAIL,
+			Material.ACTIVATOR_RAIL, Material.POWERED_RAIL);
 
 	public static void runElevator(BukkitElevator elevator) {
 		elevator.setDestFloorFromSign();
@@ -43,9 +47,19 @@ public class ElevatorExecutor {
 			tpPassengersToFloor(elevator, elevator.getStartFloor());
 		}
 		removeFloorBlocks(elevator);
+		tempRemoveRailsUnderMinecarts(passengers);
 		elevator.initTimeMeasures();
 
 		new ElevatorTask(elevator);
+	}
+
+	private static void tempRemoveRailsUnderMinecarts(List<Entity> passengers) {
+		passengers.stream()
+				.filter(Minecart.class::isInstance)
+				.map(Entity::getLocation)
+				.map(Location::getBlock)
+				.filter(block -> RAIL_MATERIALS.contains(block.getType()))
+				.forEach(rail -> new TempRemoveBlockTask(plugin, rail, 10));
 	}
 
 	public static void tpPassengersToFloor(BukkitElevator elevator, Floor floor) {
