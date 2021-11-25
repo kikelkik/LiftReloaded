@@ -104,7 +104,12 @@ public class BukkitConfig extends Config {
 		ConfigurationSection baseBlocks = config.getConfigurationSection("baseBlocks");
 		for (String block : Objects.requireNonNull(baseBlocks).getKeys(false)) {
 			Material material = Material.valueOf(block);
-			blockSpeeds.put(material, baseBlocks.getDouble(block + ".speed"));
+			double speed = baseBlocks.getDouble(block + ".speed");
+			if (speed <= 0) {
+				plugin.logWarn("Base block '" + block + "' needs a speed > 0 in baseBlocks." + block + ".speed");
+				continue;
+			}
+			blockSpeeds.put(material, speed);
 			if (baseBlocks.contains(block + ".music") && baseBlocks.getBoolean(block + ".music")) {
 				musicBlocks.add(material);
 			}
