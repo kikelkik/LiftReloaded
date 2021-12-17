@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -82,6 +83,7 @@ public class BukkitConfig extends Config {
 
 	public void loadConfig(LiftPlugin plugin) {
 		this.plugin = plugin;
+		clear();
 		File configFile = new File(plugin.getDataFolder(), File.separator + "config.yml");
 		File defaultConfigFile = new File(plugin.getDataFolder(),
 				File.separator + "default" + File.separator + "config.yml");
@@ -143,6 +145,12 @@ public class BukkitConfig extends Config {
 			useNoCheatPlus = true;
 			plugin.logDebug("Hooked into NoCheatPlus");
 		}
+	}
+
+	private void clear() {
+		blockSpeeds.clear();
+		Stream.of(floorMaterials, buttonMaterials, signMaterials, musicBlocks, shaftBlocks)
+				.forEach(Collection::clear);
 	}
 
 	private void mapConfiguration(ConfigurationSection section, Object object, Class<?> clazz) {
