@@ -18,7 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <bukkitVersion>1.17.1-R0.1-SNAPSHOT</bukkitVersion>
+        <bukkitVersion>1.18.1-R0.1-SNAPSHOT</bukkitVersion>
         <!-- for local development: choose where to put the compiled plugin jar -->
         <plugin.directory>target</plugin.directory>
     </properties>
