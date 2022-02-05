@@ -2,7 +2,6 @@ package com.minecraftcorp.lift.bukkit;
 
 import com.minecraftcorp.lift.bukkit.command.LiftCommand;
 import com.minecraftcorp.lift.bukkit.listener.PlayerListener;
-import com.minecraftcorp.lift.bukkit.listener.RedstoneListener;
 import com.minecraftcorp.lift.bukkit.listener.VehicleListener;
 import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
@@ -37,9 +36,6 @@ public class LiftPlugin extends JavaPlugin {
 		}
 
 		reload();
-		if (config.getRedstone()) {
-			new RedstoneListener();
-		}
 	}
 
 	@Override

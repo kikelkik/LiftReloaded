@@ -18,7 +18,6 @@ import lombok.Getter;
 public abstract class Config {
 
 	protected Boolean debug;
-	protected Boolean redstone;
 	protected Integer maxLiftArea;
 	protected Integer maxHeight;
 	protected Integer minHeight;

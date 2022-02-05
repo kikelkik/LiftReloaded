@@ -28,7 +28,6 @@ shaftBlocks:
   - WATER
   - "*RAIL"
   - REDSTONE_WIRE
-redstone: false
 baseBlocks:
   IRON_BLOCK:
     speed: 0.5
