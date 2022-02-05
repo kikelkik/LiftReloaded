@@ -88,6 +88,7 @@ public class BukkitConfig extends Config {
 		File defaultConfigFile = new File(plugin.getDataFolder(),
 				File.separator + "default" + File.separator + "config.yml");
 		if (!configFile.exists()) {
+			plugin.logWarn("Could not find config.yml. Plugin will create and use a new default config.");
 			copyDefaultConfig(plugin, configFile);
 		}
 
