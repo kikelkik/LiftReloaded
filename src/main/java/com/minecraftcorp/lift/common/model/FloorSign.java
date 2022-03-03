@@ -22,6 +22,8 @@ public abstract class FloorSign {
 
 	public abstract int readDestLevel();
 
+	public abstract String readCurrentName();
+
 	protected String getLineText(Floor current, Floor dest, int index) {
 		switch (index) {
 			case LINE_CURRENT_LEVEL:

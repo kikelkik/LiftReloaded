@@ -46,4 +46,9 @@ public class BukkitFloorSign extends FloorSign {
 			throw new ElevatorException("Sign does not have the correct format");
 		}
 	}
+
+	@Override
+	public String readCurrentName() {
+		return sign.getLine(LINE_CURRENT_NAME);
+	}
 }

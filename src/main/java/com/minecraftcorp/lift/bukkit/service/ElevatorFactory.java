@@ -128,6 +128,10 @@ public class ElevatorFactory {
 				.map(Sign.class::cast)
 				.map(BukkitFloorSign::new)
 				.collect(Collectors.toList());
+		String floorNameFallback = floorSigns.stream()
+				.findFirst()
+				.map(FloorSign::readCurrentName)
+				.orElse("");
 		String floorName = buttonBlocks.stream()
 				.map(block -> block.getRelative(BlockFace.DOWN))
 				.filter(config::isSign)
@@ -135,7 +139,7 @@ public class ElevatorFactory {
 				.map(Sign.class::cast)
 				.map(sign -> sign.getLine(1))
 				.findFirst()
-				.orElse("");
+				.orElse(floorNameFallback);
 		return new Floor(level, floorName, buttonBlocks.get(0).getY(), floorSigns);
 	}
 
