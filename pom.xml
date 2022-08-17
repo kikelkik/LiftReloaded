@@ -18,7 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <bukkitVersion>1.18.1-R0.1-SNAPSHOT</bukkitVersion>
+        <api.version>1.19</api.version>
         <!-- for local development: choose where to put the compiled plugin jar -->
         <plugin.directory>target</plugin.directory>
     </properties>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>${bukkitVersion}</version>
+            <version>${api.version}-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.koca2000</groupId>

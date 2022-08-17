@@ -20,4 +20,4 @@ commands:
       usage: /<command>
       permission: lift
       permission-message: You don't have lift permissions
-api-version: 1.17
+api-version: ${api.version}
