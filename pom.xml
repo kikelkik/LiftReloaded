@@ -4,7 +4,7 @@
 
     <groupId>com.minecraftcorp</groupId>
     <artifactId>lift-reloaded</artifactId>
-    <version>2.4.2-SNAPSHOT</version>
+    <version>2.4.2</version>
 
     <name>LiftReloaded</name>
     <description>Simple and easy Lifts and Elevators for Bukkit</description>
@@ -13,6 +13,7 @@
     <scm>
         <developerConnection>scm:git:https://github.com/kikelkik/LiftReloaded.git</developerConnection>
         <url>https://github.com/kikelkik/LiftReloaded.git</url>
+        <tag>lift-reloaded-2.4.2</tag>
     </scm>
 
     <properties>
