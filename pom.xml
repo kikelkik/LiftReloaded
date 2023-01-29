@@ -18,7 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <api.version>1.19</api.version>
+        <api.version>1.19.3</api.version>
         <!-- for local development: choose where to put the compiled plugin jar -->
         <plugin.directory>target</plugin.directory>
     </properties>
