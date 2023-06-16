@@ -53,6 +53,7 @@ public class PlayerListener implements Listener {
 		}
 		// Switch Floors
 		if (config.isValidLiftStructureFromButton(block.getRelative(BlockFace.DOWN))) {
+			event.setCancelled(true);
 			if (!Permission.hasPermission(player, Permission.CHANGE)) {
 				Permission.sendMessage(player, Permission.CHANGE);
 				return;
