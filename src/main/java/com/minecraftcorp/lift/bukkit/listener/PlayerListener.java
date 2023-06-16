@@ -53,6 +53,7 @@ public class PlayerListener implements Listener {
 		}
 		// Switch Floors
 		if (config.isValidLiftStructureFromButton(block.getRelative(BlockFace.DOWN))) {
+			event.setCancelled(true);
 			if (!Permission.hasPermission(player, Permission.CHANGE)) {
 				Permission.sendMessage(player, Permission.CHANGE);
 				return;
@@ -65,7 +66,7 @@ public class PlayerListener implements Listener {
 				player.sendMessage(messages.getScrollSelectDisabled());
 				return;
 			}
-			if (((Sign) block.getState()).getLine(0).isEmpty()) {
+			if (((Sign) block.getState()).getSide(BukkitFloorSign.DEFAULT_SIDE).getLine(0).isEmpty()) {
 				plugin.logDebug("Performing elevator floor scan");
 				createElevator(block.getRelative(BlockFace.DOWN), player);
 				return;

@@ -137,6 +137,7 @@ public class ElevatorFactory {
 				.filter(config::isSign)
 				.map(Block::getState)
 				.map(Sign.class::cast)
+				.map(sign -> sign.getSide(BukkitFloorSign.DEFAULT_SIDE))
 				.map(sign -> sign.getLine(1))
 				.findFirst()
 				.orElse(floorNameFallback);
