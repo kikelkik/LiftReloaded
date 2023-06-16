@@ -66,7 +66,7 @@ public class PlayerListener implements Listener {
 				player.sendMessage(messages.getScrollSelectDisabled());
 				return;
 			}
-			if (((Sign) block.getState()).getLine(0).isEmpty()) {
+			if (((Sign) block.getState()).getSide(BukkitFloorSign.DEFAULT_SIDE).getLine(0).isEmpty()) {
 				plugin.logDebug("Performing elevator floor scan");
 				createElevator(block.getRelative(BlockFace.DOWN), player);
 				return;
