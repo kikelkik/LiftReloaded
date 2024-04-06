@@ -164,6 +164,35 @@ public class PlayerListener implements Listener {
 		player.setVelocity(pushBack);
 	}
 
+	@EventHandler
+	public void onPlayerChangedWorldEvent(PlayerChangedWorldEvent event) {
+		Player player = event.getPlayer();
+		Location playerLocation = player.getLocation();
+
+		boolean playerInNoLift = plugin.isInNoLift(player.getUniqueId());
+
+		if (playerInNoLift) {
+			return;
+		}
+
+		BukkitElevator elevator = plugin.getActiveLifts()
+				.stream()
+				.findFirst()
+				.orElse(null);
+
+		if (elevator == null) {
+			return;
+		}
+
+		plugin.logDebug(player.getName() + " changed a world while lifting.");
+
+		elevator.removePassengers(Collections.singletonList(player));
+		elevator.removeFreezers(Collections.singletonList(player));
+
+		player.teleport(playerLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
+		ElevatorExecutor.resetEntityPhysics(player);
+	}
+
 	/**
 	 * If a player quits within an elevator, we have to save a location to teleport the player on next login, so he
 	 * won't fall down the shaft.
