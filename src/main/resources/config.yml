@@ -5,7 +5,7 @@
 # soundVolume (0-100) defines the relative volume for all sounds.
 configVersion: 2
 maxLiftArea: 16
-maxHeight: 256
+maxHeight: 319
 minHeight: -64
 debug: false
 autoPlace: false
