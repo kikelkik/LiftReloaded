@@ -5,7 +5,7 @@ import com.minecraftcorp.lift.common.exception.ConfigurationException;
 import com.minecraftcorp.lift.common.exception.ElevatorException;
 import com.minecraftcorp.lift.common.model.Config;
 import com.minecraftcorp.lift.common.model.Messages;
-import com.minecraftcorp.lift.common.util.ConfigReader;
+import com.minecraftcorp.lift.common.util.ConfigUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -24,7 +24,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * Note that fields that are configurable in config.yml should have the same name, so
- * {@link ConfigReader#mapConfigurationToFields )} maps values correctly to fields of this class.
+ * {@link ConfigUtils#mapConfigurationToFields )} maps values correctly to fields of this class.
  * For that mapping, you should use boxed types instead of primitive types (Integer instead of int, ...)
  */
 @Getter
@@ -101,22 +101,14 @@ public class BukkitConfig extends Config {
 		// defaultConfig was just temporarily for setting default config values
 		deleteDefaultConfig(plugin, defaultConfigFile);
 
+		ConfigUtils.migrateConfig(plugin, config);
+
 		mapConfiguration(config, this, Config.class);
 		mapConfiguration(config.getConfigurationSection("messages"), Messages.INSTANCE, Messages.class);
 
-		ConfigurationSection baseBlocks = config.getConfigurationSection("baseBlocks");
-		for (String block : Objects.requireNonNull(baseBlocks).getKeys(false)) {
-			Material material = Material.valueOf(block);
-			double speed = baseBlocks.getDouble(block + ".speed");
-			if (speed <= 0) {
-				plugin.logWarn("Base block '" + block + "' needs a speed > 0 in baseBlocks." + block + ".speed");
-				continue;
-			}
-			blockSpeeds.put(material, speed);
-			if (baseBlocks.contains(block + ".music") && baseBlocks.getBoolean(block + ".music")) {
-				musicBlocks.add(material);
-			}
-		}
+		parseBaseBlocks(config);
+		plugin.logDebug("Block speeds: " + blockSpeeds);
+		plugin.logDebug("Music blocks: " + musicBlocks);
 
 		fillMaterialFromConfig(config, "floorBlocks", floorMaterials);
 		plugin.logDebug("Floor materials added: " + floorMaterials);
@@ -148,6 +140,41 @@ public class BukkitConfig extends Config {
 		}
 	}
 
+	private void parseBaseBlocks(YamlConfiguration config) {
+		List<Map<?, ?>> baseBlocks = config.getMapList("baseBlocks");
+		for (Map<?, ?> baseBlock : baseBlocks) {
+			String type;
+			double speed;
+			try {
+				type = (String) baseBlock.get("type");
+				speed = (double) baseBlock.get("speed");
+			} catch (ClassCastException e) {
+				throw new ConfigurationException("Invalid configuration for baseBlocks[].type " +
+						"('" + baseBlock.get("type") + "') and baseBlocks[].speed ('" + baseBlock.get("speed") + "')", e);
+			}
+			Material material = Material.valueOf(type);
+			if (blockSpeeds.containsKey(material)) {
+				throw new ConfigurationException("Invalid duplicated baseBlocks configuration for '" + material + "'");
+			}
+			if (speed <= 0) {
+				plugin.logWarn("Base block '" + type + "' needs a speed > 0 in baseBlocks[].speed");
+				continue;
+			}
+			blockSpeeds.put(material, speed);
+
+			if (baseBlock.containsKey("music")) {
+				try {
+					if ((boolean) baseBlock.get("music")) {
+						musicBlocks.add(material);
+					}
+				} catch (ClassCastException e) {
+					throw new ConfigurationException("Invalid configuration for baseBlocks[].music " +
+							"('" + baseBlock.get("music") + "', type='" + type + "'). Should be 'true' or 'false'", e);
+				}
+			}
+		}
+	}
+
 	private void clear() {
 		blockSpeeds.clear();
 		Stream.of(floorMaterials, buttonMaterials, signMaterials, musicBlocks, shaftBlocks)
@@ -161,7 +188,7 @@ public class BukkitConfig extends Config {
 				fieldType != String.class ? section.getObject(name, fieldType) : section.getString(name)
 						.replace("&", "§");
 
-		ConfigReader.mapConfigurationToFields(section.getKeys(false), object, valueResolver, clazz);
+		ConfigUtils.mapConfigurationToFields(section.getKeys(false), object, valueResolver, clazz);
 	}
 
 	protected void validate() {
@@ -202,8 +229,6 @@ public class BukkitConfig extends Config {
 						.matches(configMat.toUpperCase()
 								.replace("*", ".*?")));
 	}
-
-
 
 	private static YamlConfiguration getDefaultConfig(LiftPlugin plugin, File defaultConfigFile) {
 		copyDefaultConfig(plugin, defaultConfigFile);
