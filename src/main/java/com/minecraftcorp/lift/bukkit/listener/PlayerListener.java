@@ -165,7 +165,7 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerChangedWorldEvent(PlayerChangedWorldEvent event) {
+	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		Player player = event.getPlayer();
 		Location playerLocation = player.getLocation();
 
