@@ -175,19 +175,13 @@ public class PlayerListener implements Listener {
 			return;
 		}
 
-		BukkitElevator elevator = plugin.getActiveLifts()
+		plugin.getActiveLifts()
 				.stream()
-				.findFirst()
-				.orElse(null);
-
-		if (elevator == null) {
-			return;
-		}
-
-		plugin.logDebug(player.getName() + " changed a world while lifting.");
-
-		elevator.removePassengers(Collections.singletonList(player));
-		elevator.removeFreezers(Collections.singletonList(player));
+				.filter(elevator -> elevator.getPassengers().contains(player) || elevator.getFreezers().contains(player))
+				.forEach(elevator -> {
+					elevator.removePassengers(Collections.singletonList(player));
+					elevator.removeFreezers(Collections.singletonList(player));
+				});
 
 		player.teleport(playerLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
 		ElevatorExecutor.resetEntityPhysics(player);
