@@ -167,7 +167,6 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		Player player = event.getPlayer();
-		Location playerLocation = player.getLocation();
 
 		boolean playerInNoLift = plugin.isInNoLift(player.getUniqueId());
 
@@ -183,7 +182,6 @@ public class PlayerListener implements Listener {
 					elevator.removeFreezers(Collections.singletonList(player));
 				});
 
-		player.teleport(playerLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
 		ElevatorExecutor.resetEntityPhysics(player);
 	}
 
