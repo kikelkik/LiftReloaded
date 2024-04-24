@@ -164,6 +164,35 @@ public class PlayerListener implements Listener {
 		player.setVelocity(pushBack);
 	}
 
+	@EventHandler
+	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+		Player player = event.getPlayer();
+
+		boolean playerInNoLift = plugin.isInNoLift(player.getUniqueId());
+
+		if (playerInNoLift) {
+			return;
+		}
+
+		Entity vehicle = player.getVehicle();
+		plugin.getActiveLifts()
+				.stream()
+				.filter(elevator -> elevator.getPassengers().contains(player) || elevator.getFreezers().contains(player))
+				.forEach(elevator -> {
+					elevator.removePassengers(Collections.singletonList(player));
+					elevator.removeFreezers(Collections.singletonList(player));
+					if (vehicle != null) {
+						elevator.removePassengers(Collections.singletonList(vehicle));
+						elevator.removeFreezers(Collections.singletonList(vehicle));
+					}
+				});
+
+		ElevatorExecutor.resetEntityPhysics(player);
+		if (vehicle != null) {
+			ElevatorExecutor.resetEntityPhysics(vehicle);
+		}
+	}
+
 	/**
 	 * If a player quits within an elevator, we have to save a location to teleport the player on next login, so he
 	 * won't fall down the shaft.
