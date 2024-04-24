@@ -14,8 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.bukkit.entity.Entity;
 
 public class RadioSoundTask extends SoundTask {
@@ -38,9 +36,9 @@ public class RadioSoundTask extends SoundTask {
 	@Override
 	public void run() {
 		super.run();
-		List<UUID> uuidsInElevator = Stream.concat(elevator.getPassengers().stream(), elevator.getFreezers().stream())
+		List<UUID> uuidsInElevator = elevator.getInvolvedEntities()
 				.map(Entity::getUniqueId)
-				.collect(Collectors.toList());
+				.toList();
 		radio.getPlayerUUIDs()
 				.stream()
 				.filter(uuid -> !uuidsInElevator.contains(uuid))
@@ -90,7 +88,7 @@ public class RadioSoundTask extends SoundTask {
 		try {
 			return Arrays.stream(Objects.requireNonNull(songDir.toFile()
 					.listFiles((file, name) -> name.endsWith(".nbs"))))
-					.collect(Collectors.toList());
+					.toList();
 		} catch (Exception e) {
 			throw new ConfigurationException("Unable to find music files in " + songDir, e);
 		}

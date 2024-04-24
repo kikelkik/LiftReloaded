@@ -25,7 +25,7 @@ public class VehicleListener implements Listener {
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onEntityEject(VehicleExitEvent event){
 		LivingEntity ejector = event.getExited();
-		if (plugin.isInNoLift(event.getVehicle().getUniqueId())) {
+		if (plugin.isInNoLift(event.getVehicle())) {
 			return;
 		}
 		if (ejector instanceof Player) {

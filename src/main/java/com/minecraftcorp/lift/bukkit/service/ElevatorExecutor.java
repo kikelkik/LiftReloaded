@@ -118,8 +118,8 @@ public class ElevatorExecutor {
 		List<Entity> entities = elevator.getWorld()
 				.getNearbyEntities(shaftArea, entity -> config.getLiftMobs() || entity instanceof Player)
 				.stream()
-				.filter(entity -> plugin.isInNoLift(entity.getUniqueId()))
-				.collect(Collectors.toList());
+				.filter(plugin::isInNoLift)
+				.toList();
 		plugin.logDebug("Found " + entities.size() + " entities in " + shaftArea);
 		return entities;
 	}
@@ -127,7 +127,7 @@ public class ElevatorExecutor {
 	private static List<Entity> extractPassengers(List<Entity> entities, Floor floor) {
 		return entities.stream()
 				.filter(entity -> isEntityOnFloor(floor, entity))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static Set<Entity> extractFreezers(List<Entity> entities, List<Entity> passengers) {

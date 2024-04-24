@@ -6,7 +6,6 @@ import com.minecraftcorp.lift.common.exception.ElevatorUsageException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -112,6 +111,6 @@ public abstract class Elevator {
 				: floor.compareTo(startFloor) <= 0 && floor.compareTo(destFloor) > 0;
 		return floors.stream()
 				.filter(select)
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

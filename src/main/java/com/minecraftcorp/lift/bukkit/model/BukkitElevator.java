@@ -7,6 +7,7 @@ import com.minecraftcorp.lift.common.exception.ElevatorRunException;
 import com.minecraftcorp.lift.common.model.Elevator;
 import com.minecraftcorp.lift.common.model.Floor;
 import java.util.*;
+import java.util.stream.Stream;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -53,6 +54,10 @@ public class BukkitElevator extends Elevator {
 
 	public void removeFreezers(List<Entity> freezers) {
 		freezers.forEach(this.freezers::remove);
+	}
+
+	public Stream<Entity> getInvolvedEntities() {
+		return Stream.concat(passengers.stream(), freezers.stream());
 	}
 
 	public void saveBlock(BlockState blockState) {

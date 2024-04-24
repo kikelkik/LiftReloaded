@@ -11,7 +11,6 @@ import com.minecraftcorp.lift.common.exception.ElevatorUsageException;
 import com.minecraftcorp.lift.common.model.*;
 import com.minecraftcorp.lift.common.util.Calculator;
 import java.util.*;
-import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -108,12 +107,12 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onLogout(PlayerQuitEvent event) {
-		handlePlayerQuit(event);
+		handlePlayerQuit(event.getPlayer());
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onKick(PlayerKickEvent event) {
-		handlePlayerQuit(event);
+		handlePlayerQuit(event.getPlayer());
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -142,13 +141,7 @@ public class PlayerListener implements Listener {
 		if (!playerInShaft) {
 			return;
 		}
-		boolean playerRidesLift = plugin.getActiveLifts()
-				.stream()
-				.flatMap(elevator -> Stream.concat(elevator.getPassengers()
-						.stream(), elevator.getFreezers()
-						.stream()))
-				.filter(Player.class::isInstance)
-				.anyMatch(entity -> entity.equals(player));
+		boolean playerRidesLift = !plugin.isInNoLift(player);
 		if (playerRidesLift) {
 			return;
 		}
@@ -168,16 +161,14 @@ public class PlayerListener implements Listener {
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 		Player player = event.getPlayer();
 
-		boolean playerInNoLift = plugin.isInNoLift(player.getUniqueId());
+		boolean playerInNoLift = plugin.isInNoLift(player);
 
 		if (playerInNoLift) {
 			return;
 		}
 
 		Entity vehicle = player.getVehicle();
-		plugin.getActiveLifts()
-				.stream()
-				.filter(elevator -> elevator.getPassengers().contains(player) || elevator.getFreezers().contains(player))
+		plugin.getUsingElevators(player)
 				.forEach(elevator -> {
 					elevator.removePassengers(Collections.singletonList(player));
 					elevator.removeFreezers(Collections.singletonList(player));
@@ -197,28 +188,21 @@ public class PlayerListener implements Listener {
 	 * If a player quits within an elevator, we have to save a location to teleport the player on next login, so he
 	 * won't fall down the shaft.
 	 */
-	private void handlePlayerQuit(PlayerEvent event) {
-		Player player = event.getPlayer();
-		if (plugin.isInNoLift(player.getUniqueId())) {
+	private void handlePlayerQuit(Player player) {
+		if (plugin.isInNoLift(player)) {
 			return;
 		}
-		Optional<BukkitElevator> elevatorOpt = plugin.getActiveLifts()
-				.stream()
-				.filter(elevator -> elevator.getPassengers().contains(player) || elevator.getFreezers().contains(player))
-				.findFirst();
-		if (elevatorOpt.isEmpty()) {
-			plugin.logWarn(player.getName() + " is in any lift but the elevator could not be found");
-			return;
+		List<BukkitElevator> elevators = plugin.getUsingElevators(player);
+
+		for (BukkitElevator elevator : elevators) {
+			Location baseFloor = elevator.getCenter(elevator.getFloorByLevel(1));
+			quitInElevator.put(player.getUniqueId(), baseFloor);
+			getVehicleOfPlayer(player).ifPresent(vehicle -> quitInElevator.put(vehicle.getUniqueId(), baseFloor));
+			plugin.logDebug("Remember that " + player.getName() + " quit within an elevator.");
+
+			elevator.removePassengers(Collections.singletonList(player));
+			elevator.removeFreezers(Collections.singletonList(player));
 		}
-		BukkitElevator elevator = elevatorOpt.get();
-
-		Location baseFloor = elevator.getCenter(elevator.getFloorByLevel(1));
-		quitInElevator.put(player.getUniqueId(), baseFloor);
-		getVehicleOfPlayer(player).ifPresent(vehicle -> quitInElevator.put(vehicle.getUniqueId(), baseFloor));
-		plugin.logDebug("Remember that " + player.getName() + " quit within an elevator.");
-
-		elevator.removePassengers(Collections.singletonList(player));
-		elevator.removeFreezers(Collections.singletonList(player));
 	}
 
 	private void selectNextFloor(Block signBlock, Player player) {

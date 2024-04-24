@@ -7,12 +7,12 @@ import com.minecraftcorp.lift.bukkit.model.BukkitConfig;
 import com.minecraftcorp.lift.bukkit.model.BukkitElevator;
 import com.minecraftcorp.lift.bukkit.service.sound.SoundTask;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Level;
-import java.util.stream.Stream;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
@@ -75,9 +75,18 @@ public class LiftPlugin extends JavaPlugin {
 		activeLifts.remove(elevator);
 	}
 
-	public boolean isInNoLift(UUID entityUuid) {
+	public boolean isInNoLift(Entity entity) {
+		return getUsingElevators(entity).isEmpty();
+	}
+
+	/**
+	 * Get all elevators that have 'usingEntity' as passenger or freezer
+	 */
+	public List<BukkitElevator> getUsingElevators(Entity usingEntity) {
 		return activeLifts.stream()
-				.flatMap(lift -> Stream.concat(lift.getPassengers().stream(), lift.getFreezers().stream()))
-				.noneMatch(entity -> entityUuid.equals(entity.getUniqueId()));
+				.filter(elevator -> elevator.getInvolvedEntities()
+						.map(Entity::getUniqueId)
+						.anyMatch(e -> e == usingEntity.getUniqueId()))
+				.toList();
 	}
 }

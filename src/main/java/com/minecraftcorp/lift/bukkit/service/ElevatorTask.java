@@ -8,8 +8,6 @@ import com.minecraftcorp.lift.common.model.Messages;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
@@ -28,7 +26,7 @@ public class ElevatorTask extends BukkitRunnable {
 
 	public ElevatorTask(BukkitElevator elevator) {
 		this.elevator = elevator;
-		Stream.concat(elevator.getPassengers().stream(), elevator.getFreezers().stream())
+		elevator.getInvolvedEntities()
 				.forEach(ElevatorExecutor::prepareEntityPhysics);
 
 		plugin.addActiveLift(elevator);
@@ -63,7 +61,7 @@ public class ElevatorTask extends BukkitRunnable {
 		List<Entity> passengersAtDest = passengers.stream()
 				.filter(this::reachedDestination)
 				.peek(entity -> plugin.logDebug(entity.getName() + " reached destination and waits for all passengers"))
-				.collect(Collectors.toList());
+				.toList();
 
 		elevator.removePassengers(passengersAtDest);
 		elevator.addFreezers(passengersAtDest);
@@ -106,7 +104,7 @@ public class ElevatorTask extends BukkitRunnable {
 		Set<Entity> passengers = elevator.getPassengers();
 		List<Entity> leavers = passengers.stream()
 				.filter(elevator::isOutsideShaft)
-				.collect(Collectors.toList());
+				.toList();
 		if (leavers.isEmpty()) {
 			return;
 		}
