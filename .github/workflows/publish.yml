@@ -1,0 +1,31 @@
+name: Publish Release
+
+on:
+  release:
+    types: [published, prereleased, edited]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract Version
+        id: extract_version
+        run: |
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          VERSION="${TAG_NAME#lift-reloaded-}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Publish to Modrinth
+        uses: cloudnode-pro/modrinth-publish@2.0.0
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: ${{ secrets.MODRINTH_PROJECT_ID }}
+          name: ${{ github.event.release.name }}
+          version: ${{ steps.extract_version.outputs.version }}
+          changelog: ${{ github.event.release.body }}
+          files: |
+            ${{ github.event.release.assets[0].browser_download_url }}
+          loaders: '["bukkit", "paper", "spigot"]'
+          game-versions: '["1.21.x"]'
