@@ -2,11 +2,10 @@ name: Publish Release
 
 on:
   release:
-    types: [published, prereleased, edited]
+    types: [published]
 
 jobs:
   publish:
-    name: Publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,6 +17,22 @@ jobs:
           VERSION="${TAG_NAME#lift-reloaded-}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: maven
+
+      - name: Build and package Maven project
+        run: mvn -B clean package
+
+      - name: Upload to release
+        uses: cloudnode-pro/release-upload-asset@1.0.2
+        with:
+          gh-token: ${{ github.token }}
+          files: target/lift-reloaded-${{ steps.extract_version.outputs.version }}.jar; type=application/java-archive
+
       - name: Publish to Modrinth
         uses: cloudnode-pro/modrinth-publish@2.0.0
         with:
@@ -26,7 +41,6 @@ jobs:
           name: ${{ github.event.release.name }}
           version: ${{ steps.extract_version.outputs.version }}
           changelog: ${{ github.event.release.body }}
-          files: |
-            ${{ github.event.release.assets[0].browser_download_url }}
+          files: target/lift-reloaded-${{ steps.extract_version.outputs.version }}.jar
           loaders: '["bukkit", "paper", "spigot"]'
           game-versions: '["1.21.x"]'
