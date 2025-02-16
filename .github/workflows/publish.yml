@@ -43,4 +43,4 @@ jobs:
           changelog: ${{ github.event.release.body }}
           files: target/lift-reloaded-${{ steps.extract_version.outputs.version }}.jar
           loaders: '["bukkit", "paper", "spigot"]'
-          game-versions: '["1.21.x"]'
+          game-versions: '["1.21.4"]'
