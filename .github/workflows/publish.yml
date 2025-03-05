@@ -34,7 +34,7 @@ jobs:
           files: target/lift-reloaded-${{ steps.extract_version.outputs.version }}.jar; type=application/java-archive
 
       - name: Publish to Modrinth
-        uses: cloudnode-pro/modrinth-publish@2.0.0
+        uses: cloudnode-pro/modrinth-publish@v2
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
           project: ${{ secrets.MODRINTH_PROJECT_ID }}
