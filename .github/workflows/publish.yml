@@ -14,7 +14,7 @@ jobs:
         id: extract_version
         run: |
           TAG_NAME="${{ github.event.release.tag_name }}"
-          VERSION="${TAG_NAME#lift-reloaded-}"
+          VERSION="${TAG_NAME#lift-reloaded-parent-}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Set up Java 21
@@ -31,9 +31,11 @@ jobs:
         uses: cloudnode-pro/release-upload-asset@1.0.2
         with:
           gh-token: ${{ github.token }}
-          files: target/lift-reloaded-${{ steps.extract_version.outputs.version }}.jar; type=application/java-archive
+          files: |-
+            lift-reloaded-paper/target/lift-reloaded-paper-${{ steps.extract_version.outputs.version }}.jar; type=application/java-archive
+            lift-reloaded-spigot/target/lift-reloaded-spigot-${{ steps.extract_version.outputs.version }}.jar; type=application/java-archive
 
-      - name: Publish to Modrinth
+      - name: Publish to Modrinth (Spigot)
         uses: cloudnode-pro/modrinth-publish@v2
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
@@ -41,6 +43,18 @@ jobs:
           name: ${{ github.event.release.name }}
           version: ${{ steps.extract_version.outputs.version }}
           changelog: ${{ github.event.release.body }}
-          files: target/lift-reloaded-${{ steps.extract_version.outputs.version }}.jar
-          loaders: '["bukkit", "paper", "spigot"]'
-          game-versions: '["1.21.4"]'
+          files: lift-reloaded-spigot/target/lift-reloaded-spigot-${{ steps.extract_version.outputs.version }}.jar
+          loaders: '["bukkit", "spigot"]'
+          game-versions: '["1.21.10"]'
+
+      - name: Publish to Modrinth (Paper)
+        uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: ${{ secrets.MODRINTH_PROJECT_ID }}
+          name: ${{ github.event.release.name }}
+          version: ${{ steps.extract_version.outputs.version }}
+          changelog: ${{ github.event.release.body }}
+          files: lift-reloaded-paper/target/lift-reloaded-paper-${{ steps.extract_version.outputs.version }}.jar
+          loaders: '["paper"]'
+          game-versions: '["1.21.10"]'

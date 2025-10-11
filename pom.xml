@@ -2,13 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.minecraftcorp</groupId>
-    <artifactId>lift-reloaded</artifactId>
+    <groupId>io.liftreloaded</groupId>
+    <artifactId>lift-reloaded-parent</artifactId>
     <version>2.5.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <name>LiftReloaded</name>
     <description>Simple and easy Lifts and Elevators for Bukkit</description>
     <url>https://github.com/kikelkik/LiftReloaded</url>
+    <modules>
+        <module>lift-reloaded-core</module>
+        <module>lift-reloaded-paper</module>
+        <module>lift-reloaded-spigot</module>
+    </modules>
 
     <scm>
         <developerConnection>scm:git:https://github.com/kikelkik/LiftReloaded.git</developerConnection>
@@ -19,9 +25,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>21</java.version>
-        <api.version>1.21.4</api.version>
-        <!-- for local development: choose where to put the compiled plugin jar -->
-        <plugin.directory>target</plugin.directory>
+        <api.version>1.21.10</api.version>
     </properties>
 
     <dependencies>
@@ -29,21 +33,7 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>${api.version}-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.koca2000</groupId>
-            <artifactId>NoteBlockAPI</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.neatmonster</groupId>
-            <artifactId>nocheatplus</artifactId>
-            <version>3.16.0-RC</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -71,16 +61,51 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <outputDirectory>${plugin.directory}</outputDirectory>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
             </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.6.1</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <createDependencyReducedPom>false</createDependencyReducedPom>
+                                <artifactSet>
+                                    <includes>
+                                        <include>io.liftreloaded:lift-reloaded-core</include>
+                                    </includes>
+                                </artifactSet>
+                                <filters>
+                                    <filter>
+                                        <artifact>io.liftreloaded:lift-reloaded-core</artifact>
+                                        <excludes>
+                                            <exclude>META-INF/MANIFEST.MF</exclude>
+                                        </excludes>
+                                    </filter>
+                                </filters>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <repositories>
@@ -88,16 +113,5 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
-        <repository>
-            <!-- for nocheatplus -->
-            <id>md5-repo</id>
-            <url>https://repo.md-5.net/repository/releases/</url>
-        </repository>
-        <repository>
-            <!-- for note blocks -->
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
     </repositories>
-
 </project>
