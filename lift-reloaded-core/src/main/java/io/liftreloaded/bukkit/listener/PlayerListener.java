@@ -111,13 +111,11 @@ public abstract class PlayerListener implements Listener {
 
 	protected void handleLogin(PlayerEvent playerEvent) {
 		Player player = playerEvent.getPlayer();
-		plugin.logInfo("Handle login for player: " + player.getName());
 		UUID uuid = player.getUniqueId();
 		if (!quitInElevator.containsKey(uuid)) {
 			return;
 		}
 		Location baseFloor = quitInElevator.get(uuid);
-		plugin.logInfo("Base floor: " + baseFloor.toString());
 		getVehicleOfPlayer(player).ifPresent(ElevatorExecutor::resetEntityPhysics);
 		ElevatorExecutor.resetEntityPhysics(player);
 		player.teleport(baseFloor, PlayerTeleportEvent.TeleportCause.PLUGIN); // FIXME: sometimes fall damage
